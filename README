@@ -1,0 +1,5 @@
+
+Building the eduID documentation
+================================
+
+Install pandoc and gnu make and type 'make'. Read the PDFs. Repeate, rinse.
