@@ -1,0 +1,14 @@
+% Operations using Cosmos and Puppet
+% Leif Johansson / SUNET / 2013 / v0.0.1
+
+
+Introduction
+============
+
+This document describes how to setup and run operations (ops) for a small to midsized 
+systems collection while maintaining scalability, security and auditability for changes.
+
+
+
+Design Requirements
+===================

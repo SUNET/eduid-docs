@@ -1,0 +1,125 @@
+% Yubikey NEO setup
+% Leif Johansson
+% 2013-10-01
+
+Yubikey NEO setup
+=================
+
+Add Klas stuff ppa & yubico/stable
+----------------------------------
+
+    # sudo add-apt-repository ppa:klali/stuff
+    # sudo add-apt-repository ppa:yubico/stable
+    # sudo apt-get update
+
+Install ykpersonalize
+---------------------
+ 
+    # sudo apt-get install yubikey-personalization
+
+Set yubikey in CCID+HID-mode
+----------------------------
+
+    # ykpersonalize -m82
+
+Generate key
+------------
+
+    # cd /dev/shm
+    # mkdir foo
+    # cd foo
+    # export GNUPGHOME=$PWD
+
+    # gpg --gen-key (use defaults - RSA 2048)
+
+use 1y as validity
+
+    # gpg --edit-key --expert $id
+    gpg> adduid # until done
+    gpg> addkey # pick RA (set your own capabilities) -> toggle S & E & A should result in only "Authenticate"
+    gpg> list
+
+    pub  2048R/662D4043  created: 2013-10-01  expires: 2014-10-01  usage: SC  
+                     trust: ultimate      validity: ultimate
+    sub  2048R/FED803A7  created: 2013-10-01  expires: 2014-10-01  usage: E   
+    sub  2048R/4334FEF8  created: 2013-10-01  expires: 2014-10-01  usage: A   
+    [ unknown] (1)  Leif Johansson <leifj@nordu.net>
+    [ unknown] (2)  Leif Johansson <leifj@mnt.se>
+    [ unknown] (3). Leif Johansson <leifj@sunet.se>
+
+    gpg> passwd 
+
+Remember to remove passphrase
+
+Clone ykneo-opengpg repo
+------------------------
+
+    # echo $PWD 
+    /dev/shm/foo
+    # git clone https://github.com/Yubico/ykneo-openpgp
+
+Install monkeysphere
+--------------------
+
+    # sudo apt-get install monkeysphere
+
+Extra credit
+------------
+
+For extra credit, build your own openpgp applet and set APPLET_ID to include your keyID: Edit build.xml and change APPLET_AID to end in 0x06:<your key>:0x00:0x00. The 0x06 bit is a yubikey-thing. Follow the README file to download java card kit 2.2.2 and build using ant. Next install using gpshell gpinstall.txt
+
+
+Write key to card
+-----------------
+
+    # unset HISTFILE
+    # ./keyParser a <A-usage subkey id> 12345678
+
+paste resulting opensc-tool cmdline into shell 
+
+    # ./keyParser e <E-usage subkey id> 12345678
+
+paste resulting opensc-tool cmdline into shell
+
+    # ./keyParser s <SC-usage subkey id> 12345678
+
+paste resulting opensc-tool cmdline into shell
+
+
+Test
+----
+
+    # gpg --card-status
+    gpg: WARNING: unsafe permissions on homedir `/dev/shm/foo'
+    gpg: detected reader `Yubico Yubikey NEO OTP+CCID 00 00'
+    Application ID ...: D2760001240102000000000000010000
+    Version ..........: 2.0
+    Manufacturer .....: test card
+    Serial number ....: 00000001
+    Name of cardholder: [not set]
+    Language prefs ...: [not set]
+    Sex ..............: unspecified
+    URL of public key : [not set]
+    Login data .......: [not set]
+    Signature PIN ....: forced
+    Key attributes ...: 2048R 2048R 2048R
+    Max. PIN lengths .: 127 127 127
+    PIN retry counter : 3 3 3
+    Signature counter : 0
+    Signature key ....: F95F 1654 911B 8B21 68A1  EF18 6D13 20C7 662D 4043
+    Encryption key....: 609A 2FC8 5606 421D B848  14DF 3EC4 D983 FED8 03A7
+    Authentication key: E2A3 D430 532E F05B B37F  1822 966F 771E 4B6F EF82
+    General key info..: pub  2048R/662D4043 2013-10-01 Leif Johansson <leifj@sunet.se>
+    sec   2048R/662D4043  created: 2013-10-01  expires: 2014-10-01
+    ssb   2048R/FED803A7  created: 2013-10-01  expires: 2014-10-01
+    ssb   2048R/4B6FEF82  created: 2013-10-01  expires: 2014-10-01
+
+
+SSH
+---
+
+    # cat .gnupg/gpg-agent.conf 
+    default-cache-ttl 3600
+    enable-ssh-support
+    log-file /tmp/gpg-agent.log
+    debug guru
