@@ -5,6 +5,8 @@
 Yubikey NEO setup
 =================
 
+This guide steps you through the process of setting up a Yubico neo with the opengpg applet for use with openssh and gpg.
+
 Add Klas stuff ppa & yubico/stable
 ----------------------------------
 
@@ -20,24 +22,37 @@ Install ykpersonalize
 Set yubikey in CCID+HID-mode
 ----------------------------
 
+From the factory the yubikey is setup only as a standard/classical OTP device. Run the following command to set it in dual HID (keyboard) and CCID mode. Resist the temptation to set it in CCID-only mode - you won't be able to use ykpersonalize again if you do.
+
     # ykpersonalize -m82
 
 Generate key
 ------------
 
+Create some space in memory you can easily clean out later...
+
     # cd /dev/shm
     # mkdir foo
     # cd foo
+
+Make sure gpg uses this directory and generate a key using the defaults (a 2048 bit RSA key) and set a 1 year validity.
+
     # export GNUPGHOME=$PWD
+    # gpg --gen-key
 
-    # gpg --gen-key (use defaults - RSA 2048)
-
-use 1y as validity
+Next edit the key in expert mode - $id is the id of the key you just created. Add your uid's (adduid).
 
     # gpg --edit-key --expert $id
     gpg> adduid # until done
-    gpg> addkey # pick RA (set your own capabilities) -> toggle S & E & A should result in only "Authenticate"
+
+Now add 1 subkey to be used with SSH.
+
+    gpg> addkey 
+
+Pick RA (set your own capabilities) and toggle S & E & A which should result in only "Authenticate". This is what the result should look like.
+
     gpg> list
+
 
     pub  2048R/662D4043  created: 2013-10-01  expires: 2014-10-01  usage: SC  
                      trust: ultimate      validity: ultimate
@@ -47,12 +62,16 @@ use 1y as validity
     [ unknown] (2)  Leif Johansson <leifj@mnt.se>
     [ unknown] (3). Leif Johansson <leifj@sunet.se>
 
+Finally use passwd to remove the passphrase - you're about to load this onto the yubikey.
+
     gpg> passwd 
 
-Remember to remove passphrase
-
+Remember to save the changes whe you exit edit mode. Now its time to prepare your yubikey for receiving the key.
+ 
 Clone ykneo-opengpg repo
 ------------------------
+
+You need some software.
 
     # echo $PWD 
     /dev/shm/foo
@@ -72,6 +91,8 @@ For extra credit, build your own openpgp applet and set APPLET_ID to include you
 Write key to card
 -----------------
 
+You're going to be running keyParser to generate opensc-tool commands that is used to programm the applet. This operation is done 3 times. By unsetting HISTFILE you're preventing the key data from winding up in your shell history.
+
     # unset HISTFILE
     # ./keyParser a <A-usage subkey id> 12345678
 
@@ -88,6 +109,8 @@ paste resulting opensc-tool cmdline into shell
 
 Test
 ----
+
+Lets see what we have...
 
     # gpg --card-status
     gpg: WARNING: unsafe permissions on homedir `/dev/shm/foo'
