@@ -1,5 +1,5 @@
 % Operations using Cosmos and Puppet
-% Leif Johansson / SUNET / 2013 / v0.0.1
+% Leif Johansson / SUNET / 2013 / v0.0.2
 
 
 Introduction
@@ -9,6 +9,71 @@ This document describes how to setup and run operations (ops) for a small to mid
 systems collection while maintaining scalability, security and auditability for changes.
 
 
-
 Design Requirements
 ===================
+
+Consistency
+-----------
+
+Changes should be applied atomically across multiple system components on multiple 
+physical and logical hosts (aka system state). The change mechanism should permit verification of state
+consistency and all modifications should be idempotents, i.e the same operation 
+performend twice on the same system state should not in itself cause a problem. 
+
+Auditability
+------------
+
+It must be possible to review changes in advance of applying them to system state. It
+must also be possible to trace changes that have already been applied to privileged
+system operators.
+
+Authenticity
+------------
+
+All changes must be authenticated by private keys in the personal possession of privileged
+system operators before applied to system state aswell as at any point in the future.
+
+Simplicity
+----------
+
+The system must be simple and must not rely on external services to be online to maintain 
+state except when new state is being requested and applied. When new state is being requested
+external dependencies must be kept to a minimum.
+
+Architecture
+============
+
+The cosmos system is used to authenticate and distribute change-requests and prepare the 
+system state for running puppet. Puppet is used to apply idempotent changes to the system state.
+
+~~~~~ {.ditaa .no-separation}
++------------+     +------+
+| cosmo repo |---->| host |-----+
++------------+     +------+     |
+                      ^         |
+                      |         |
+                   (change) (manifests)   
+                      |         |
+                  +--------+    |
+                  | puppet |<---+
+                  +--------+
+~~~~~
+
+Private data (eg system credentials, application passwords, or private keys) are encrypted 
+to a master host PGP key before stored in the cosmos repo.
+
+System state can be tied to classes used to classify systems into roles (eg "database server"
+or "webserver"). System classes can be assigned by regular expressions on the fqdn (eg all 
+hosts named db-\*  is assigned to the "database server" class) using a custom puppet ENC.  
+The system classes are also made available to 'fabric' in a custom fabfile.
+
+All data in the system is maintained in a cosmos GIT repository.  Changes are 
+requested by signing a tag in the repository with a system-wide well-known name-prefix. 
+The tag name typically includes the date and a counter to make it unique. 
+
+The signature on the tag is authenticated against a set of trusted keys maintained in the 
+repository - so that one trusted system operator must be present to authenticate addition or
+removal of another trusted system operator. This authentication of tags is done in addition 
+to authenticating access to the GIT repository when the changes are pushed. 
+
+This model also serves to provide auditability of all changes.
