@@ -1,16 +1,25 @@
-% Operations using Cosmos and Puppet
-% Leif Johansson / SUNET / 2013 / v0.0.2
+% System Operations using Cosmos & Puppet
+% Leif Johansson / SUNET / 2013 / v0.0.3
 
 
 Introduction
 ============
 
-This document describes how to setup and run operations (ops) for a small to midsized 
+This document describes how to setup and run systems and service operations for a small to midsized 
 systems collection while maintaining scalability, security and auditability for changes.
+The process described below is based on opensource components and assumes a Linux-based hosting
+infrastructure. These limitations could easily be removed though. This document describes the 
+multiverse template for combining cosmos and puppet.
 
 
 Design Requirements
 ===================
+
+The cosmos system has been used to operate security-critical infrastructure for a few years before
+it was combined with puppet into the multiverse template. 
+
+Several of the design requirements below are fulfilled by comos alone, while some (eg consistency) 
+are easier to achieve using puppet than with cosmos alone.
 
 Consistency
 -----------
@@ -43,8 +52,26 @@ external dependencies must be kept to a minimum.
 Architecture
 ============
 
-The cosmos system is used to authenticate and distribute change-requests and prepare the 
-system state for running puppet. Puppet is used to apply idempotent changes to the system state.
+The basic architecture of puppet is to use a VCS (git) to manage and distribute changes to a
+staging area on each managed host. At the staging area the changes are authenticated (using 
+tag signatures) and if valid, distributed to the host using local rsync. Before and after 
+hooks (using run-parts) are used to provide programmatic hooks.
+
+Administrative Scope
+--------------------
+
+The repository constitutes the administrative domain of a multiverse setup: each host is
+connected to (i.e runs cosmos off of) a single GIT repository and derives trust from signed
+tags on that repository. A host cannot belong to more than 1 administratve domain but each
+administrative domains can host multiple DNS domains - all hosts in a single repository 
+doesn't need to be in the same zone.
+
+The role of Puppet
+------------------
+
+In the multiverse template, the cosmos system is used to authenticate and distribute changes 
+and prepare the system state for running puppet. Puppet is used to apply idempotent changes 
+to the system state using "puppet apply".
 
 ~~~~~ {.ditaa .no-separation}
 +------------+     +------+
@@ -59,21 +86,336 @@ system state for running puppet. Puppet is used to apply idempotent changes to t
                   +--------+
 ~~~~~
 
+Note that there is no puppet master in this setup so collective resources cannot be used
+in multiverse. Instead 'fabric' is used to provide a simple way to loop over subsets of 
+the hosts in a managed domain.
+
 Private data (eg system credentials, application passwords, or private keys) are encrypted 
 to a master host PGP key before stored in the cosmos repo.
 
 System state can be tied to classes used to classify systems into roles (eg "database server"
 or "webserver"). System classes can be assigned by regular expressions on the fqdn (eg all 
 hosts named db-\*  is assigned to the "database server" class) using a custom puppet ENC.  
-The system classes are also made available to 'fabric' in a custom fabfile.
 
-All data in the system is maintained in a cosmos GIT repository.  Changes are 
+The system classes are also made available to 'fabric' in a custom fabfile. Fabric (or fab)
+is a simple frontend to ssh that allows an operator to run commands on multiple remote 
+hosts at once.
+
+Trust
+-----
+
+All data in the system is maintained in a cosmos GIT repository.  A change is 
 requested by signing a tag in the repository with a system-wide well-known name-prefix. 
 The tag name typically includes the date and a counter to make it unique. 
 
 The signature on the tag is authenticated against a set of trusted keys maintained in the 
-repository - so that one trusted system operator must be present to authenticate addition or
+repository itself - so that one trusted system operator must be present to authenticate addition or
 removal of another trusted system operator. This authentication of tags is done in addition 
-to authenticating access to the GIT repository when the changes are pushed. 
+to authenticating access to the GIT repository when the changes are pushed. Trust is typically
+bootstrapped when a repository is first established. This model also serves to provide auditability 
+of all changes for as long as repository history is retained.
 
-This model also serves to provide auditability of all changes.
+Access to hosts is done through ssh with ssh-key access. The ssh keys are typically maintained
+using either puppet or cosmos natively. 
+
+Consistency
+-----------
+
+As a master-less architecture, multiverse relies on _eventual consistency_: changes will eventually
+be applied to all hosts. In such a model it becomes very imporant that changes are idempotent, so
+that applying a change multiple times (in an effort to get dependent changes through) won't cause
+an issue. Using native cosmos, such changes are achived using timestamp-files that control entry 
+into code-blocks:
+
+```
+stamp="${COSMOS\_BASE}/stamps/foo-v04.stamp"
+if ! test -f $stamp; then
+# do something here
+touch $stamp
+fi
+```
+
+This pattern is mostly replaced in multiverse by using puppet manifests and modules that
+are inherently indempotent but it can nevertheless be a useful addition to the toolchain.
+
+Implementation
+==============
+
+Implementation is based on two major components: cosmos and puppet. The cosmos system was
+created by Simon Josefsson and Fredrik Tulin as a simple and secure way to distribute files
+and run pre- and post-processors (using run-parts). This allows for a simple, yet complete 
+mechanism for updating system state.
+
+The second component is puppet which is run in masterless (aka puppet apply) mode on files
+distributed and authenticated using cosmos. Puppet is a widely deployed way to describe
+system state using a set of idempotent operations. In theory, anything that can de done
+using puppet can be done using cosmos post-processors but puppet allows for greater 
+abstraction which greatly increases readability.
+
+The combination of puppet and cosmos is maintained on github in the 'leifj/multiverse'
+project.
+
+
+Operations
+==========
+
+Setting up a new administrative domain
+--------------------------------------
+
+The simplest way is to clone the multiverse repository. First install 'git'. On ubuntu/debian
+this is in the 'git-core' package:
+
+```
+# apt-get install git-core
+```
+
+Also install 'fabric' - a very useful too for multiple-host-ssh that is integrated into 
+multiverse. Fabric provides the 'fab' command which will be introduced later on.
+
+```
+# apt-get install fabric
+```
+
+These two tools (git & fabric) are only needed on mashines where system operators work.
+
+Next clone git://github.com/leifj/multiverse.git - this will form the basis of your cosmos+puppet
+repository:
+
+```
+# git clone git://github.com/leifj/multiverse.git myproj-cosmos
+# cd myproj-cosmos
+```
+
+Next rename the upstream from github - you will want to keep this around to get new
+features as the multiverse codebase evolves.
+
+```
+# git remote rename origin multiverse
+```
+
+Now add a new remote pointing to the git repo where you are going to be pushing 
+changes for your administrative domain. Also add a read-only version of this remote 
+as 'ro'. The read-only remote is used by multiverse scripts during host bootstrap.
+
+```
+# git remote add origin git@yourhost:myproj-cosmos.git
+# git remote add ro git://yourhost/myproj-cosmos.git
+```
+
+Note that you can maintain your repo on just about any git hosting platform, including
+github, gitorius or your own local setup as long as it supports read-only "git://" access
+to your repository. It is important that the remotes called 'origin' and 'ro' refer to 
+your repository and not to anything else (like a private version of multiverse).
+
+Now add at least one key to 'global/overlay/etc/cosmos/keys/' in a file with a .pub extension
+(eg 'operator.pub') - the name of the file doesn't matter other than the extension.
+
+```
+# cp mykey.pub global/overlay/etc/cosmos/keys/
+# git add global/overlay/etc/cosmos/keys/mykey.pub
+# git commit -m "initial trust" global/overlay/etc/cosmos/keys/mykey.pub
+```
+
+At this point you should create and sign your first tag:
+
+```
+# ./bump-tag
+```
+
+Make sure that you are using the key whose public key you just added to the repository! You
+can now start adding hosts.
+
+Adding a host
+-------------
+
+Bootstrapping a host is done using the 'addhost' command:
+
+```
+# ./addhost [-b] $fqdn
+```
+
+The -b flag causes addhost to attempt to bootstrap cosmos on the remote host using
+ssh as root. This requires that root key trust be established in advance. The addhost
+command creates and commits the necessary changes to the repository to add a host named
+$fqdn. Only fully qualified hostnames should ever be used in cosmos+puppet.
+
+The boostrap process will create a cron-job on $fqdn that runs 
+
+```
+# cosmos update && cosmos apply
+```
+
+every 15 minutes. This should be a good starting point for your domain. Now you may
+want to add some 'naming rules'.
+
+Defining naming rules
+---------------------
+
+A naming rule is a mapping from a name to a set of puppet classes. These are defined in 
+the file 'global/overlay/etc/puppet/cosmos-rules.yaml' (linked to the toplevel directory
+in multiverse). This is a YAML format file whose keys are regular expressions and whose
+values are lists of puppet class definitions. Here is an example that assigns all hosts
+with names on the form ns\<number\>.example.com to the 'nameserver' class.
+
+```
+'ns[0-9]?.example.com$':
+   nameserver:
+```
+
+Note that the value is a hash with an empty value ('namserver:') and not just a string
+value.
+
+Since regular expressions can also match on whole strings so the following is also
+valid:
+
+```
+smtp.example.com:
+   mailserver:
+      relay: smtp.upstream.example.com
+```
+
+In this example the mailserver puppet class is given the relay argument (cf puppet 
+documentation).
+
+Fabric integration
+------------------
+
+Given the above example the following command would reload all nameservers:
+
+```
+# fab --roles=nameservers -- rndc reload
+```
+
+
+Creating a change-request
+-------------------------
+
+After performing whatever changes you want to the reqpository, commit the changes as usual
+and then sign an appropriately formatted tag. This last operation is wrapped in the 'bump-tag' command:
+
+```
+# git commit -m "some changes" global/overlay/somethig or/other/files
+# ./bump-tag
+```
+
+The bump-tag command will ask for confirmation before signing and will rely on the git and
+gpg commands to create, sign and push the correct tag.
+
+Puppet modules
+--------------
+
+Puppet modules can be maintained using a designated cosmos pre-task that reads a file 
+global/overlay/etc/puppet/cosmos-modules.conf. This file is a simple text-format file
+with 3 columns:
+
+```
+#
+# name source (puppetlabs fq name or git url) upgrade (yes/no)
+#
+concat puppetlabs/concat no
+stdlib puppetlabs/stdlib no
+cosmos git://github.com/leifj/puppet-cosmos.git yes
+ufw git://github.com/fredrikt/puppet-module-ufw.git yes
+apt puppetlabs/apt no
+vcsrepo puppetlabs/vcsrepo no
+xinetd puppetlabs/xinetd no
+#golang elithrar/golang yes
+python git://github.com/fredrikt/puppet-python.git yes
+hiera-gpg git://github.com/fredrikt/hiera-gpg.git no
+```
+
+This is an example file - the first field is the name of the module, the second is 
+the source: either a puppetlabs path or a git URL. The final field is 'yes' if the
+module should be automatically updated or 'no' if it should only be installed. As usual
+lines beginning with '#' are silently ignored.
+
+This file is processed in a cosmos pre-hook so the modules should be available for 
+use in the puppet post-hook. By default the file contains several lines that are
+commented out so review this file as you start a new multiverse setup.
+
+In order to add a new module, the best way is to commit a change to this file and
+tag this change, allowing time for the module to get installed everywhere before 
+adding a change that relies on this module.
+
+HOWTO and Common Tasks
+======================
+
+Adding a new operator
+---------------------
+
+Add the ascii-armoured key in a file in `global/overlay/etc/cosmos/keys` with a `.pub` extension
+
+```
+# git add global/overlay/etc/cosmos/keys/thenewoperator.pub 
+# git commit -m "the new operator" \
+   global/overlay/etc/cosmos/keys/thenewoperator.pub
+# ./bump-tag
+```
+
+Removing an operator
+--------------------
+
+Identitfy the public key file in `global/overlay/etc/cosmos/keys`
+
+```
+# git rm global/overlay/etc/cosmos/keys/X.pub
+# git commit -m "remove operator X" \
+   global/overlay/etc/cosmos/keys/X.pub
+# ./bump-tag
+```
+
+Changing administrative domain for a host
+-----------------------------------------
+
+In the `$new` repository:
+
+```
+# ./addhost -b $hostname
+# fab -H $hostname chrepo repository:git://other/repo.git
+```
+
+In the `$old` repository:
+
+```
+# rsync -avz $hostname/ $new/$hostname/
+```
+
+In the `$new` repository:
+
+```
+# git add $hostname/
+# git commit -m "transfer from $old" $hostname
+# ./bump-tag
+```
+
+In the `$old` repository:
+
+```
+# git rm -rf $hostname
+# git commit -m "remove $hostname"
+# ./bump-tag
+```
+
+Reviewing all changes
+---------------------
+
+Running a command on multiple hosts
+-----------------------------------
+
+On a single host:
+
+```
+# fab -H $hostname -- command -a one -b another -c
+```
+
+On multiple hosts based on category:
+
+```
+# fab --roles=webserver -- ls /tmp
+```
+
+On all hosts:
+
+```
+# fab -- reboot # danger Will Robinsson!
+```
