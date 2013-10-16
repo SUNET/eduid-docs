@@ -49,7 +49,7 @@ Now add 1 subkey to be used with SSH.
 
     gpg> addkey 
 
-Pick RA (set your own capabilities) and toggle S & E & A which should result in only "Authenticate". This is what the result should look like.
+Pick RSA (set your own capabilities) and toggle S & E & A which should result in only "Authenticate". This is what the result should look like.
 
     gpg> list
 
@@ -85,7 +85,13 @@ Install monkeysphere
 Extra credit
 ------------
 
-For extra credit, build your own openpgp applet and set APPLET_ID to include your keyID: Edit build.xml and change APPLET_AID to end in 0x06:<your key>:0x00:0x00. The 0x06 bit is a yubikey-thing. Follow the README file to download java card kit 2.2.2 and build using ant. Next install using gpshell gpinstall.txt
+For extra credit, build your own openpgp applet and set APPLET_ID to include your keyID: Edit build.xml and change APPLET_AID to end in 0x06:<your key>:0x00:0x00. The 0x06 bit is a yubikey-thing. Follow the README file in ykneo-openpgp (that just just cloned from github) to download java card kit 2.2.2 and build using ant. Next install using the following command:
+
+```
+gpshell gpinstall.txt
+```
+
+You'll need gpshell which is part of the gpshell package. 
 
 
 Write key to card
