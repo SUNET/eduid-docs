@@ -8,7 +8,7 @@ Introduction
 Overview
 --------
 
-This document describes the policy for management of key materials at the Swedish University Network (SUNET) Key Management Infrastructure (KMI). 
+The Swedish University Network (SUNET) Key Management Infrastructure (KMI) is a set of infrastructure component used to manage securiy-critical cryptographic keys. The SUNET KMI includes servers, network equpment and hardware security modules (HSMs). This document describes the policy for the SUNET KMI.
 
 The SUNET Key Management Policy (KMP) along with a set of application specific Key Management Practice Statements (KMPS) and the SUNET KMI constitute the SUNET Key Management Facility. This document follows the outline KMP from NIST SP 800-57, part 2 to the extent that it has been deemed applicable and commensurate with Swedish Law.
 
@@ -17,7 +17,9 @@ The SUNET KMF is a SUNET infrastructure service under the control of the SUNET o
 Objectives
 ----------
 
-The keys managed by the SUNET KMI are used to protect critical security infrastructure and personal identity information. The intrinsic value of the resources protected is low but the immaterial value of a security incident is comparatively large. SUNET and its partner organizations have been active Internet citizens for a long time and have been relatively successful in protecting against several forms of attack. The services and infrastructure protected by the keys managed by the SUNET KMI constitute an attractive attack target, not because of the value of transactions conducted on these systems but because of the potential PR-value of such an attack.
+The keys managed by the SUNET KMI are used to protect critical security infrastructure and personal identity information. The intrinsic value of the resources protected is low but the immaterial value of a security incident is comparatively large. SUNET and its partner organizations have been active Internet citizens for a long time and have been relatively successful in protecting against several forms of attack. 
+
+The services and infrastructure protected by the keys managed by the SUNET KMI constitute an attractive attack target, not because of the value of transactions conducted on these systems but because of the potential PR-value of such an attack.
 
 ### Threats
 
@@ -60,11 +62,11 @@ All application will publish a Key Management Practice Statement (KMPS) that des
 
 ### Central Oversight Authority and Key Materials Managers
 
-The Central Oversight Authority (CAO) for the SUNET KMI is the SUNET CEO who may delegate this authority to the SUNET CISO ("Säkerhetsansvarig") role. Each application will identify an Application Key Materials Manager (A-KMM) role which may be held by one or more individuals. Unless otherwize specified the A-KMM role is assigned to the Service Manager ("systemförvaltare") of the SUNET service which uses the key(s).
+The Central Oversight Authority (COA) for the SUNET KMI is the SUNET CEO who may delegate this authority to the SUNET CISO ("Säkerhetsansvarig") role. Each application will identify an Application Key Materials Manager (A-KMM) role which may be held by one or more individuals. Unless otherwize specified the A-KMM role is assigned to the Service Manager ("systemförvaltare") of the SUNET service which uses the key(s).
 
 ### KC Operators
 
-Each Key Container is assigned a set of KC operators tasked with technical management of the KC. The KC Operator role is appointed by the CAO. Each KC Operator will be assigned a PGP key on a hardware token to be used for authentication. Each KC is also assigned an entry in the KC Audit Log (cf below).
+Each Key Container is assigned a set of KC operators tasked with technical management of the KC. The KC Operator role is appointed by the COA. Each KC Operator will be assigned a PGP key on a hardware token to be used for authentication. Each KC is also assigned an entry in the KC Audit Log (cf below).
 
 Contact Details
 ---------------
@@ -131,7 +133,7 @@ All IPR related to the SUNET KMF owned by SUNET is made available under the SUNE
 Identification and Authentication
 =================================
 
-The SUNET KMP is mainly used to manage infrastructure component keys. Identifycation is therefore limited to duly designated systems operators responsible for key provisionng. Identification of systems operators are to be done on the basis of either in-person validation of a goverment issued identification document (eg passport or drivers license) or in-person verification of another form of credential for individuals whose identity is already well established by other means, for instance by verifying a PGP key fingerprint.
+The SUNET KMP is mainly used to manage infrastructure component keys. Identifycation is therefore limited to duly designated KC Operators and A-KMMs responsible for key provisionng and application integration. Identification of is to be done on the basis of either in-person validation of a goverment issued identification document (eg passport or drivers license) or in-person verification of another form of credential for individuals whose identity is already well established by other means, for instance by verifying a PGP key fingerprint.
 
 Application KMPS documents will describe the detailed key generation, re-generation, revocation and rollover mechanisms as they are application dependent.
 
@@ -170,9 +172,9 @@ In addition the following specific requirements apply:
 
 Certain forms of Key Containers allow a form of virtualization. In this case the virtual KCs will be located in the same zone as the parent KC. When a KC is initialized an audit log covering all activities related to that KC is established (cf below). 
 
-Each KC is assigned a set of KC operators tasked with technical management of the KC. The KC Operator role is appointed by the CAO. Each KC Operator will be assigned a PGP key on a hardware token to be used for authentication. Each KC is also assigned an entry in the KC Audit Log (cf below).
+Each KC is assigned a set of KC operators tasked with technical management of the KC. The KC Operator role is appointed by the COA. Each KC Operator will be assigned a PGP key on a hardware token to be used for authentication. Each KC is also assigned an entry in the KC Audit Log (cf below).
 
-Access to a KC must be restricted to KC Operators and the CAO using technical, pysical and logical access control. Physical access to KCs in the 'red' zone must be restricted using at least 3 indpendent access layers, 1 of which must be available only to the KC Operator and to the duly appointed representative of the KC Operator. Pysical access to KCs in the 'black' zone must be restricted using at least 4 independent access layers when not in use, 2 of which must be available only to the KC Operator.
+Access to a KC must be restricted to KC Operators and the COA using technical, pysical and logical access control. Physical access to KCs in the 'red' zone must be restricted using at least 3 indpendent access layers, 1 of which must be available only to the KC Operator and to the duly appointed representative of the KC Operator. Pysical access to KCs in the 'black' zone must be restricted using at least 4 independent access layers when not in use, 2 of which must be available only to the KC Operator.
 
 Entropy
 -------
