@@ -47,7 +47,7 @@ The guiding principles of the SUNET Key Management Infrastructure are:
    +-------+--------------------------------+
 ~~~
 
-The precise employment of security controls to match these levels is described below. Normally the 'black' zone is reserved for long-term private keys, audit logs, Hardward Security Module backups and other forms of off-line key containers. The 'red' zone is typically used for production online HardWard Security Modules and other Key Containers used by user-facing services.
+The precise employment of security controls to match these levels is described below. Normally the 'black' zone is reserved for long-term private keys, audit logs, Hardward Security Module backups and other forms of off-line key containers. The 'red' zone is typically used for production online hardware security modules and other Key Containers used by user-facing services.
 
 Community and Applicability
 ---------------------------
@@ -140,7 +140,7 @@ Application Key Management Practice Statement documents will describe the detail
 Operational Requirements
 ========================
 
-The Key Management Infrastructure consists of several logical and physical Key Containers (Hardware Security Modules, servers etc) and several Cryptographic Keys stored in those containers. A Key Container may be either online where the keys or cryptographic functions are available to other systems and devices, or offline where the Key Container is stored in an inert state and not actively use. Each Key Container is restricted to a single security zone and may not move to a lower security zone unless protected by a key belonging to a higher security zone.
+The Key Management Infrastructure consists of several logical and physical Key Containers (hardware security modules, servers etc) and several Cryptographic Keys stored in those containers. A Key Container may be either online where the keys or cryptographic functions are available to other systems and devices, or offline where the Key Container is stored in an inert state and not actively use. Each Key Container is restricted to a single security zone and may not move to a lower security zone unless protected by a key belonging to a higher security zone.
 
 Key Container Storage and Transport
 ------------------------
