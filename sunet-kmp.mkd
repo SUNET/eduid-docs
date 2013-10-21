@@ -1,0 +1,248 @@
+% SUNET Key Management Policy
+% Leif Johansson
+% 2013-10-18
+
+Introduction
+============
+
+Overview
+--------
+
+This document describes the policy for management of key materials at the Swedish University Network (SUNET) Key Management Infrastructure (KMI). 
+
+The SUNET Key Management Policy (KMP) along with a set of application specific Key Management Practice Statements (KMPS) and the SUNET KMI constitute the SUNET Key Management Facility. This document follows the outline KMP from NIST SP 800-57, part 2 to the extent that it has been deemed applicable and commensurate with Swedish Law.
+
+The SUNET KMF is a SUNET infrastructure service under the control of the SUNET office of the CEO. The SUNET KMF is available for use by applications and services offered by SUNET, NORDUnet and their direct customers.
+
+Objectives
+----------
+
+The keys managed by the SUNET KMI are used to protect critical security infrastructure and personal identity information. The intrinsic value of the resources protected is low but the immaterial value of a security incident is comparatively large. SUNET and its partner organizations have been active Internet citizens for a long time and have been relatively successful in protecting against several forms of attack. The services and infrastructure protected by the keys managed by the SUNET KMI constitute an attractive attack target, not because of the value of transactions conducted on these systems but because of the potential PR-value of such an attack.
+
+### Threats
+
+The primary threats are:
+
+- theft of personal data including personal identifiable information and user credentials
+- impersonation and subversion of critical system components
+- impersonation of users at relying party services by subverting identity providers
+
+### Principels of Operation
+
+The guiding principles of the SUNET KMI are:
+
+- each private key belongs to a hierarchical sequence of security zone as follows: black zone is contained in red zone and has higher security requirements than red zone. Similarly red zone is contained in blue zone has higher security requirements than blue zone.
+- no private key may leave its designated security zone unless protected by another key which lives in a higher security zone.
+- security zones map to baseline security controls from NIST SP 800-54:
+
+~~~
+   +-------+--------------------------------+
+   | zone  |   NIST 800-54 / FIPS 199 Level |
+   +-------+--------------------------------+
+   | black |   HIGH                         |
+   | red   |   MODERATE                     |
+   | blue  |   LOW                          |
+   +-------+--------------------------------+
+~~~
+
+The precise employment of security controls to match these levels is described below. Normally the 'black' zone is reserved for long-term private keys, audit logs, HSM backups and other forms of off-line key containers. The 'red' zone is typically used for production online HSMs and other key containers used by user-facing services (eg network-attached HSMs).
+
+Community and Applicability
+---------------------------
+
+The SUNET KMI is used for the following applications:
+
+* SUNET eduID Service
+* SWAMID Metadata Service
+* SUNET.se DNSSEC
+
+All application will publish a Key Management Practice Statement (KMPS) that describe the operational details specific to that application. Some applications will reference common KMPS documents if they are sufficiently similar. KMI operates several logical and physical Key Containers (HSMs, servers etc) and several Cryptographic Keys stored in those containers.
+
+### Central Oversight Authority and Key Materials Managers
+
+The Central Oversight Authority (CAO) for the SUNET KMI is the SUNET CEO who may delegate this authority to the SUNET CISO ("Säkerhetsansvarig") role. Each application will identify an Application Key Materials Manager (A-KMM) role which may be held by one or more individuals. Unless otherwize specified the A-KMM role is assigned to the Service Manager ("systemförvaltare") of the SUNET service which uses the key(s).
+
+### KC Operators
+
+Each Key Container is assigned a set of KC operators tasked with technical management of the KC. The KC Operator role is appointed by the CAO. Each KC Operator will be assigned a PGP key on a hardware token to be used for authentication. Each KC is also assigned an entry in the KC Audit Log (cf below).
+
+Contact Details
+---------------
+
+~~~
+SUNET vid Vetenskapsrådet
+Attn: Säkerhetsansvarig
+Tulegatan 11, 2tr
+113 53 Stockholm
+
+email: security@sunet.se
+~~~
+
+General Provisions
+==================
+
+Obligations
+-----------
+
+### Central Oversight Authority
+
+The SUNET COA is responsible for the overall security and operations of the SUNET KMI and is responsible for the secure operations of infrastructure common to all KMI applications. This includes making sure that the appropriate contracts and agreements are in place to operate and maintain KMI logical and physical infrastructure.
+
+### Application Key Materials Manager(s)
+
+All A-KMMs will report on application security to the SUNET COA and will respond to incidents and threats specific to that application.
+
+### Key Container Operator(s)
+
+All KC Operators will report in KC security to the SUNET COA and will repond to incidents and threats specific to that Key Container.
+
+Liability and Financial Responsability
+---------
+
+TODO - Kammarkollegiets ansvarsförsäkring
+
+Interpretation and Enforcement
+------------------------------
+
+These Terms and any dispute or claim arising out of or in connection with them or their subject matter or formation (including non-contractual disputes or claims) shall be governed by and construed in accordance with the legislation of Sweden. The courts of Sweden will have exclusive jurisdiction over any such dispute or claim.
+
+Fees
+----
+
+Not applicable.
+
+Publication and Repositories
+----------------------------
+
+The SUNET KMP (this document) along with any applicable Key Management Practice Statement documents is published on the SUNET KMI website: http://www.sunet.se/kmf
+
+Each application will provide repository where any public artifacts (eg public keys, certificates, CRLs or fingerprints) related to the KMI is made available. The SUNET KMI website will provide informational links to each public repository.
+
+Confidentiality Policy
+----------------------
+
+The SUNET KMI is goverened by Swedish law which regulate information dissemination and confidentiality for all goverment agencies. The public information principle (SFS 1949:105 §1) states that except under certain specific conditions, all goverment documents are public. The private keys and any related information, software and configuration used by the SUNET KMI will be treated as secret information ("sekretess") in the sense of SFS 2009:400 §1 and will not be provided under the public information principle.
+
+Intellectual Property Rights
+----------------------------
+
+All IPR related to the SUNET KMF owned by SUNET is made available under the SUNET BSD License (for software) and  Creative Commons Attribution-ShareAlike 3.0 Unported License for documentation including this document and any applicable Key Management Practice Statements.
+
+Identification and Authentication
+=================================
+
+The SUNET KMP is mainly used to manage infrastructure component keys. Identifycation is therefore limited to duly designated systems operators responsible for key provisionng. Identification of systems operators are to be done on the basis of either in-person validation of a goverment issued identification document (eg passport or drivers license) or in-person verification of another form of credential for individuals whose identity is already well established by other means, for instance by verifying a PGP key fingerprint.
+
+Application KMPS documents will describe the detailed key generation, re-generation, revocation and rollover mechanisms as they are application dependent.
+
+Operational Requirements
+========================
+
+The KMI consists of several logical and physical Key Containers (HSMs, servers etc) and several Cryptographic Keys stored in those containers. A KC may be either online where the keys or cryptographic functions are available to other systems and devices, or offline where the KC is stored in an inert state and not actively use. Each Key Container (KC) is restricted to a single security zone and may not move to a lower security zone unless protected by a key belonging to a higher security zone.
+
+KC Storage and Transport
+------------------------
+
+Transport and offline storage of the KC Audit Log Device, KCs and KC in transport require the use of Tamper Evident Bags (TEB). Suggested models include MMX Industries or AMPAC. It must not be possible to open a TEB without it being noticed upon inspection of the TEB. The use of TEBs is to ensure that data stored on devices in the TEB has the same state as when it was deposited in the bag. This provides an additional level of protection against malicious tampering with KCs and KC Audit Logs.
+
+When transporting a KC it must be protected by a tamper-evident bag or if that is impractical, must be protected from tampering in such a way that it is impossible to extract or modify the keys contained in the KC. If a KC must be transported with active keys in it and the use of tamper evident bags is not possible, it must be accompanied by at least 2 duly appointed representatives of the COA. All such activities must be loged in the KC Audit Log (cf below).
+
+KC Initialization and Access Control
+------------------------------------
+
+Initialization of a Key Container is the process by which a Key Container is prepared for use. This process must be followd both when a KC is received from a vendor or when it is being reused. Key Container initialization must involve a full reset of any data storage device included in the KC. The precise details of KC Initialization must be described in the KMPS.
+
+All Key Containers must be initialized using equipment and services maintained in the same zone as the KC being initialized. Such equipment and services must not have material dependencies on equipment or services outside the zone in a way that may impact the KC initialization. Specifically all equpment used must
+
+- be disconnected from anything except a network in the same zone
+- must be provided with a source of true random entropy only available in the same zone
+- be disconnected from any non-essential peripherial equipment
+- be clearly identified with the zone it belongs to
+
+In addition the following specific requirements apply:
+
+- In the 'black' zone, all wireless and wired network cards must be disabled. 
+- In the 'red' zone all wireless network cards must be disabled.
+- In the 'red' zone network connectivity is permitted
+- In the 'red' zone firewalled connection to the Internet is permitted. 
+- In the 'red' zone only public repository services must be reachable from outside the 'red' zone network. 
+- In the 'blue' zone, both wired and authenticated wireless networks are allowed.
+
+Certain forms of Key Containers allow a form of virtualization. In this case the virtual KCs will be located in the same zone as the parent KC. When a KC is initialized an audit log covering all activities related to that KC is established (cf below). 
+
+Each KC is assigned a set of KC operators tasked with technical management of the KC. The KC Operator role is appointed by the CAO. Each KC Operator will be assigned a PGP key on a hardware token to be used for authentication. Each KC is also assigned an entry in the KC Audit Log (cf below).
+
+Access to a KC must be restricted to KC Operators and the CAO using technical, pysical and logical access control. Physical access to KCs in the 'red' zone must be restricted using at least 3 indpendent access layers, 1 of which must be available only to the KC Operator and to the duly appointed representative of the KC Operator. Pysical access to KCs in the 'black' zone must be restricted using at least 4 independent access layers when not in use, 2 of which must be available only to the KC Operator.
+
+Entropy
+-------
+
+Key Generation critically depends on the availability of a good source of true random entropy for the key generator. The entropy source used must be based on a physical process (eg a source of quantum noice) and must not be a Pseudo Random Number Generator (PRNG). The entropy source must be regularly verified to pass the diehard testsuite. In addition the following requirements apply to the 'black' and 'red' zones:
+
+- Entropy in the 'black' zone should not be mixed with a PRNG before use. Exceptions to this rule must be carefully considered and documented.
+- Entropy in the 'red' zone may be mixed with a keyed PRNG before use but the PRNG seed should then be generated by black zone entropy.
+
+[is this useful and/or practical? /leifj]
+
+Key Generation
+--------------
+
+Normally and if applicable, keys should be generated on the KC where it will be used. In certain situations it may be necessary to generate keys on a separate device and transfer to the KC. In that case great care must be taken to avoid key leakage. Specifically: 
+
+- the device used is in the 'black' zone
+- any intermediate data used during key generation is stored on non-persistent storage (eg a ramdisk)
+- any intermediate data used during key generation is cleared after use
+
+Also note the requirements on Entropy above.
+
+Key Rollover 
+------------
+
+All conditions and requirements for key generation apply equally to key rollover.
+
+KC Audit Log
+------------
+
+The KC Audit Log will be maintained on a portable storage device containing a plain text file for each KC that clearly identifies the KC or class of KC it relates to. The files will be maintained in a Version Control System (VCS) supporting signed modifications. After each log annotation, the modification will be comitted in the VCS and finally the update signed by a PGP key of the KC Operator.
+
+Each time the Audit Log storage device is closed the hash of the last signed update is printed and affixed to a tamper-evident bag used to store the Audit Log Device. Each time the Audit Log device is removed from the tamper evident bag, the last entry is verified with the label printed on the bag. If there is a missmatch, the signatures on all updates in the log must be verified for correctness by verifying against the set of trusted KC Operator PGP keys.
+
+The format of Audit Log Message is free but must include the following information:
+
+- timestamp
+- the affected KC
+- operation performed on the KC
+- people involved
+- text annotations
+
+It is expected that all KCs at a site will be able to share a common KC Audit Log Device in the form of a small laptop with USB sticks as a backup mechanism.
+
+Key Termination
+---------------
+
+Key Container Termination
+-------------------------
+
+Key Containers must be destroyed by shredding or other mechanism that ensure destruction of any remaining key materials.
+
+KMI Termination
+---------------
+
+Should it become necessary to terminate the SUNET KMI, all active KC must be securely destroyed by the mechanism described above.
+
+Cryptographic Key and Certificate Formats
+=========================================
+
+Industry standard formats must be used throughout. The SUNET KMI will normally publish public keys as X.509 self-signed certificates. 
+
+Specification and Administration
+================================
+
+Change control for this specification is controlled by the SUNET COA.
+
+Refences
+========
+
+*NIST 800-57*
+
+*diehard*
