@@ -27,7 +27,7 @@ The primary threats are:
 - impersonation and subversion of critical system components
 - impersonation of users at relying party services by subverting identity providers
 
-### Principels of Operation
+### Principles of Operation
 
 The guiding principles of the SUNET KMI are:
 
