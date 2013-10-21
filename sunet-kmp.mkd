@@ -145,9 +145,9 @@ The Key Management Infrastructure consists of several logical and physical Key C
 Key Container Storage and Transport
 ------------------------
 
-Transport and offline storage of the Key Container Audit Log Device, Key Containers and Key Container in transport require the use of Tamper Evident Bags . Suggested models include MMX Industries or AMPAC. It must not be possible to open a Tamper Evident Bags without it being noticed upon inspection of the Tamper Evident Bags. The use of Tamper Evident Bagss is to ensure that data stored on devices in the Tamper Evident Bags has the same state as when it was deposited in the bag. This provides an additional level of protection against malicious tampering with Key Containers and Key Container Audit Logs.
+Transport and offline storage of the Key Container Audit Log Device, Key Containers and Key Container in transport require the use of tamper evident bags . Suggested models include MMX Industries or AMPAC. It must not be possible to open a tamper evident bags without it being noticed upon inspection of the tamper evident bags. The use of tamper evident bagss is to ensure that data stored on devices in the tamper evident bags has the same state as when it was deposited in the bag. This provides an additional level of protection against malicious tampering with Key Containers and Key Container Audit Logs.
 
-When transporting a Key Container it must be protected by a tamper-evident bag or if that is impractical, must be protected from tampering in such a way that it is impossible to extract or modify the keys contained in the Key Container. If a Key Container must be transported with active keys in it and the use of tamper evident bags is not possible, it must be accompanied by at least 2 duly appointed representatives of the Central Oversight Authority. All such activities must be loged in the Key Container Audit Log (cf below).
+When transporting a Key Container it must be protected by a tamper evident bag or if that is impractical, must be protected from tampering in such a way that it is impossible to extract or modify the keys contained in the Key Container. If a Key Container must be transported with active keys in it and the use of tamper evident bags is not possible, it must be accompanied by at least 2 duly appointed representatives of the Central Oversight Authority. All such activities must be loged in the Key Container Audit Log (cf below).
 
 Key Container Initialization and Access Control
 ------------------------------------
@@ -207,7 +207,7 @@ Key Container Audit Log
 
 The Key Container Audit Log will be maintained on a portable storage device containing a plain text file for each Key Container that clearly identifies the Key Container or class of Key Container it relates to. The files will be maintained in a Version Control System (VCS) supporting signed modifications. After each log annotation, the modification will be comitted in the VCS and finally the update signed by a PGP key of the Key Container Operator.
 
-Each time the Audit Log storage device is closed the hash of the last signed update is printed and affixed to a tamper-evident bag used to store the Audit Log Device. Each time the Audit Log device is removed from the tamper evident bag, the last entry is verified with the label printed on the bag. If there is a missmatch, the signatures on all updates in the log must be verified for correctness by verifying against the set of trusted Key Container Operator PGP keys.
+Each time the Audit Log storage device is closed the hash of the last signed update is printed and affixed to a tamper evident bag used to store the Audit Log Device. Each time the Audit Log device is removed from the tamper evident bag, the last entry is verified with the label printed on the bag. If there is a missmatch, the signatures on all updates in the log must be verified for correctness by verifying against the set of trusted Key Container Operator PGP keys.
 
 The format of Audit Log Message is free but must include the following information:
 
