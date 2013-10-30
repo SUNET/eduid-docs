@@ -8,7 +8,7 @@ Introduction
 Overview
 --------
 
-The Swedish University Network (SUNET) Key Management Infrastructure  is a set of infrastructure component used to manage securiy-critical cryptographic keys. The SUNET Key Management Infrastructure includes servers, network equpment and Hardward Security Modules. This document describes the policy for the SUNET Key Management Infrastructure.
+The Swedish University Network (SUNET) Key Management Infrastructure  is a set of infrastructure component used to manage security-critical cryptographic keys. The SUNET Key Management Infrastructure includes servers, network equipment and hardware security modules. This document describes the policy for the SUNET Key Management Infrastructure.
 
 The SUNET Key Management Policy (this document) along with a set of application specific Key Management Practice Statements and the SUNET Key Management Infrastructure constitute the SUNET Key Management Facility. This document follows the outline Key Management Policy from NIST SP 800-57, part 2 to the extent that it has been deemed applicable and commensurate with Swedish Law.
 
@@ -33,7 +33,7 @@ The primary threats are:
 
 The guiding principles of the SUNET Key Management Infrastructure are:
 
-- each private key belongs to a hierarchical sequence of security zone as follows: black zone is contained in red zone and has higher security requirements than red zone. Similarly red zone is contained in blue zone has higher security requirements than blue zone.
+- each private key belongs to a hierarchical sequence of security zones as follows: black zone is contained in red zone and has higher security requirements than red zone. Similarly red zone is contained in blue zone and has higher security requirements than blue zone.
 - no private key may leave its designated security zone unless protected by another key which lives in a higher security zone.
 - security zones map to baseline security controls from NIST SP 800-54:
 
@@ -47,7 +47,7 @@ The guiding principles of the SUNET Key Management Infrastructure are:
    +-------+--------------------------------+
 ~~~
 
-The precise employment of security controls to match these levels is described below. Normally the 'black' zone is reserved for long-term private keys, audit logs, Hardward Security Module backups and other forms of off-line key containers. The 'red' zone is typically used for production online hardware security modules and other Key Containers used by user-facing services.
+The precise employment of security controls to match these levels is described below. Normally the 'black' zone is reserved for long-term private keys, audit logs, hardware security module backups and other forms of off-line key containers. The 'red' zone is typically used for production online hardware security modules and other Key Containers used by user-facing services.
 
 Community and Applicability
 ---------------------------
@@ -58,11 +58,11 @@ The SUNET Key Management Infrastructure is used for the following applications:
 * SWAMID Metadata Service
 * SUNET.se DNSSEC
 
-All application will publish a Key Management Practice Statement that describe the operational details specific to that application. Some applications will reference common Key Management Practice Statement documents if they are sufficiently similar. Key Management Infrastructure operates several logical and physical Key Containers (Hardward Security Modules, servers etc) and several Cryptographic Keys stored in those containers.
+All applications will publish a Key Management Practice Statement that describe the operational details specific to that application. Some applications will reference common Key Management Practice Statement documents if they are sufficiently similar. Key Management Infrastructure operates several logical and physical Key Containers (hardware security modules, servers etc) and several Cryptographic Keys stored in those containers.
 
 ### Central Oversight Authority and Key Materials Managers
 
-The Central Oversight Authority  for the SUNET Key Management Infrastructure is the SUNET CEO who may delegate this authority to the SUNET CISO ("Säkerhetsansvarig") role. Each application will identify an Application Key Materials Manager role which may be held by one or more individuals. Unless otherwize specified the Application Key Materials Manager role is assigned to the Service Manager ("systemförvaltare") of the SUNET service which uses the key(s).
+The Central Oversight Authority  for the SUNET Key Management Infrastructure is the SUNET CEO who may delegate this authority to the SUNET CISO ("Säkerhetsansvarig") role. Each application will identify an Application Key Materials Manager role which may be held by one or more individuals. Unless otherwize specified the Application Key Materials Manager role is assigned to the Product Manager ("systemförvaltare") of the SUNET service which uses the key(s).
 
 ### Key Container Operators
 
@@ -123,7 +123,7 @@ Each application will provide repository where any public artifacts (eg public k
 Confidentiality Policy
 ----------------------
 
-The SUNET Key Management Infrastructure is goverened by Swedish law which regulate information dissemination and confidentiality for all goverment agencies. The public information principle (SFS 1949:105 §1) states that except under certain specific conditions, all goverment documents are public. The private keys and any related information, software and configuration used by the SUNET Key Management Infrastructure will be treated as secret information ("sekretess") in the sense of SFS 2009:400 §1 and will not be provided under the public information principle.
+The SUNET Key Management Infrastructure is goverened by Swedish law which regulate information dissemination and confidentiality for all government agencies. The public information principle (SFS 1949:105 §1) states that except under certain specific conditions, all government documents are public. The private keys and any related information, software and configuration used by the SUNET Key Management Infrastructure will be treated as secret information ("sekretess") in the sense of SFS 2009:400 §1 and will not be provided under the public information principle.
 
 Intellectual Property Rights
 ----------------------------
@@ -133,7 +133,7 @@ All IPR related to the SUNET Key Management Facility owned by SUNET is made avai
 Identification and Authentication
 =================================
 
-The SUNET Key Management Policy is mainly used to manage infrastructure component keys. Identifycation is therefore limited to duly designated Key Container Operators and Application Key Materials Managers responsible for key provisionng and application integration. Identification of is to be done on the basis of either in-person validation of a goverment issued identification document (eg passport or drivers license) or in-person verification of another form of credential for individuals whose identity is already well established by other means, for instance by verifying a PGP key fingerprint.
+The SUNET Key Management Policy is mainly used to manage infrastructure component keys. Identification is therefore limited to duly designated Key Container Operators and Application Key Materials Managers responsible for key provisionng and application integration. Identification is to be done on the basis of either in-person validation of a government issued identification document (eg passport or drivers license) or in-person verification of another form of credential for individuals whose identity is already well established by other means, for instance by verifying a PGP key fingerprint.
 
 Application Key Management Practice Statement documents will describe the detailed key generation, re-generation, revocation and rollover mechanisms as they are application dependent.
 
@@ -145,9 +145,9 @@ The Key Management Infrastructure consists of several logical and physical Key C
 Key Container Storage and Transport
 ------------------------
 
-Transport and offline storage of the Key Container Audit Log Device, Key Containers and Key Container in transport require the use of tamper evident bags . Suggested models include MMX Industries or AMPAC. It must not be possible to open a tamper evident bags without it being noticed upon inspection of the tamper evident bags. The use of tamper evident bagss is to ensure that data stored on devices in the tamper evident bags has the same state as when it was deposited in the bag. This provides an additional level of protection against malicious tampering with Key Containers and Key Container Audit Logs.
+Transport and offline storage of the Key Container Audit Log Device, Key Containers and Key Container in transport require the use of tamper evident bags . Suggested models include MMX Industries or AMPAC. It must not be possible to open a tamper evident bags without it being noticed upon inspection of the tamper evident bags. The use of tamper evident bags is to ensure that data stored on devices in the tamper evident bags has the same state as when it was deposited in the bag. This provides an additional level of protection against malicious tampering with Key Containers and Key Container Audit Logs.
 
-When transporting a Key Container it must be protected by a tamper evident bag or if that is impractical, must be protected from tampering in such a way that it is impossible to extract or modify the keys contained in the Key Container. If a Key Container must be transported with active keys in it and the use of tamper evident bags is not possible, it must be accompanied by at least 2 duly appointed representatives of the Central Oversight Authority. All such activities must be loged in the Key Container Audit Log (cf below).
+When transporting a Key Container it must be protected by a tamper evident bag or if that is impractical, must be protected from tampering in such a way that it is impossible to extract or modify the keys contained in the Key Container. If a Key Container must be transported with active keys in it and the use of tamper evident bags is not possible, it must be accompanied by at least 2 duly appointed representatives of the Central Oversight Authority. All such activities must be logged in the Key Container Audit Log (cf below).
 
 Key Container Initialization and Access Control
 ------------------------------------
@@ -174,7 +174,7 @@ Certain forms of Key Containers allow a form of virtualization. In this case the
 
 Each Key Container is assigned a set of Key Container operators tasked with technical management of the Key Container. The Key Container Operator role is appointed by the Central Oversight Authority. Each Key Container Operator will be assigned a PGP key on a hardware token to be used for authentication. Each Key Container is also assigned an entry in the Key Container Audit Log (cf below).
 
-Access to a Key Container must be restricted to Key Container Operators and the Central Oversight Authority using technical, pysical and logical access control. Physical access to Key Containers in the 'red' zone must be restricted using at least 3 indpendent access layers, 1 of which must be available only to the Key Container Operator and to the duly appointed representative of the Key Container Operator. Pysical access to Key Containers in the 'black' zone must be restricted using at least 4 independent access layers when not in use, 2 of which must be available only to the Key Container Operator.
+Access to a Key Container must be restricted to Key Container Operators and the Central Oversight Authority using technical, physical and logical access control. Physical access to Key Containers in the 'red' zone must be restricted using at least 3 indpendent access layers, 1 of which must be available only to the Key Container Operator and to the duly appointed representative of the Key Container Operator. Physical access to Key Containers in the 'black' zone must be restricted using at least 4 independent access layers when not in use, 2 of which must be available only to the Key Container Operator.
 
 Entropy
 -------
@@ -189,7 +189,7 @@ Key Generation critically depends on the availability of a good source of true r
 Key Generation
 --------------
 
-Normally and if applicable, keys should be generated on the Key Container where it will be used. In certain situations it may be necessary to generate keys on a separate device and transfer to the Key Container. In that case great care must be taken to avoid key leakage. Specifically: 
+Normally and if applicable, keys should be generated on the Key Container where it will be used. In certain situations it may be necessary to generate keys on a separate device and transfer to the Key Container. In that case great care must be taken to avoid key leakage. Specifically if: 
 
 - the device used is in the 'black' zone
 - any intermediate data used during key generation is stored on non-persistent storage (eg a ramdisk)
@@ -205,9 +205,9 @@ All conditions and requirements for key generation apply equally to key rollover
 Key Container Audit Log
 ------------
 
-The Key Container Audit Log will be maintained on a portable storage device containing a plain text file for each Key Container that clearly identifies the Key Container or class of Key Container it relates to. The files will be maintained in a Version Control System (VCS) supporting signed modifications. After each log annotation, the modification will be comitted in the VCS and finally the update signed by a PGP key of the Key Container Operator.
+The Key Container Audit Log will be maintained on a portable storage device containing a plain text file for each Key Container that clearly identifies the Key Container or class of Key Container it relates to. The files will be maintained in a Version Control System (VCS) supporting signed modifications. After each log annotation, the modification will be committed in the VCS and finally the update signed by a PGP key of the Key Container Operator.
 
-Each time the Audit Log storage device is closed the hash of the last signed update is printed and affixed to a tamper evident bag used to store the Audit Log Device. Each time the Audit Log device is removed from the tamper evident bag, the last entry is verified with the label printed on the bag. If there is a missmatch, the signatures on all updates in the log must be verified for correctness by verifying against the set of trusted Key Container Operator PGP keys.
+Each time the Audit Log storage device is closed the hash of the last signed update is printed and affixed to a tamper evident bag used to store the Audit Log Device. Each time the Audit Log device is removed from the tamper evident bag, the last entry is verified with the label printed on the bag. If there is a mismatch, the signatures on all updates in the log must be verified for correctness by verifying against the set of trusted Key Container Operator PGP keys.
 
 The format of Audit Log Message is free but must include the following information:
 
