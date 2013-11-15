@@ -99,7 +99,8 @@ keyParser in the next step uses openpgp2ssh from the monkeysphere package.
 
 
 
-### Write key to card
+Write key to card
+-----------------
 
 You're going to be running keyParser to generate opensc-tool commands that is used to programm the applet. This operation is done 3 times. By unsetting HISTFILE you're preventing the key data from winding up in your shell history.
 
