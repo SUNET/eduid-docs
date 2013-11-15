@@ -16,7 +16,7 @@ Add Klas stuff ppa & yubico/stable
 
 Install ykpersonalize
 ---------------------
- 
+
     # sudo apt-get install yubikey-personalization
 
 Set yubikey in CCID+HID-mode
@@ -48,64 +48,65 @@ Next edit the key in expert mode - $id is the id of the key you just created. Ad
 
 Now add 1 subkey to be used with SSH.
 
-    gpg> addkey 
+    gpg> addkey
 
 Pick RSA (set your own capabilities) and toggle S & E & A which should result in only "Authenticate". This is what the result should look like.
 
     gpg> list
 
 
-    pub  2048R/662D4043  created: 2013-10-01  expires: 2014-10-01  usage: SC  
+    pub  2048R/662D4043  created: 2013-10-01  expires: 2014-10-01  usage: SC
                      trust: ultimate      validity: ultimate
-    sub  2048R/FED803A7  created: 2013-10-01  expires: 2014-10-01  usage: E   
-    sub  2048R/4334FEF8  created: 2013-10-01  expires: 2014-10-01  usage: A   
+    sub  2048R/FED803A7  created: 2013-10-01  expires: 2014-10-01  usage: E
+    sub  2048R/4334FEF8  created: 2013-10-01  expires: 2014-10-01  usage: A
     [ unknown] (1)  Leif Johansson <leifj@nordu.net>
     [ unknown] (2)  Leif Johansson <leifj@mnt.se>
     [ unknown] (3). Leif Johansson <leifj@sunet.se>
 
 Finally use passwd to remove the passphrase - you're about to load this onto the yubikey.
 
-    gpg> passwd 
+    gpg> passwd
 
 Remember to save the changes whe you exit edit mode. Now its time to prepare your yubikey for receiving the key.
- 
+
 
 Extra credit
 ------------
 
 For extra credit, build your own openpgp applet and set APPLET_ID to include your keyID: Edit build.xml and change APPLET_AID to end in 0x06:<your key>:0x00:0x00. The 0x06 bit is a yubikey-thing. Follow the README file in ykneo-openpgp (that just just cloned from github) to download java card kit 2.2.2 and build using ant. Next install using the following command:
 
-Clone ykneo-opengpg repo
-------------------------
-
-You need some software.
-
-    # echo $PWD 
-    /dev/shm/foo
-    # git clone https://github.com/Yubico/ykneo-openpgp
-
-Install monkeysphere
---------------------
-
-    # sudo apt-get install monkeysphere
-
-
 ```
 gpshell gpinstall.txt
 ```
 
-You'll need gpshell which is part of the gpshell package. 
+You'll need gpshell which is part of the gpshell package.
 
 
-Write key to card
------------------
+### Clone ykneo-opengpg repo
+
+You need some software.
+
+    # echo $PWD
+    /dev/shm/foo
+    # git clone https://github.com/Yubico/ykneo-openpgp
+
+
+### Install monkeysphere
+
+keyParser in the next step uses openpgp2ssh from the monkeysphere package.
+
+    # sudo apt-get install monkeysphere
+
+
+
+### Write key to card
 
 You're going to be running keyParser to generate opensc-tool commands that is used to programm the applet. This operation is done 3 times. By unsetting HISTFILE you're preventing the key data from winding up in your shell history.
 
     # unset HISTFILE
     # ./keyParser a <A-usage subkey id> 12345678
 
-paste resulting opensc-tool cmdline into shell 
+paste resulting opensc-tool cmdline into shell
 
     # ./keyParser e <E-usage subkey id> 12345678
 
@@ -150,7 +151,7 @@ Lets see what we have...
 SSH
 ---
 
-    # cat .gnupg/gpg-agent.conf 
+    # cat .gnupg/gpg-agent.conf
     default-cache-ttl 3600
     enable-ssh-support
     log-file /tmp/gpg-agent.log
