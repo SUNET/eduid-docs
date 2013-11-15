@@ -31,6 +31,7 @@ Generate key
 
 Create some space in memory you can easily clean out later...
 
+    # umask 077
     # cd /dev/shm
     # mkdir foo
     # cd foo
@@ -68,6 +69,12 @@ Finally use passwd to remove the passphrase - you're about to load this onto the
 
 Remember to save the changes whe you exit edit mode. Now its time to prepare your yubikey for receiving the key.
  
+
+Extra credit
+------------
+
+For extra credit, build your own openpgp applet and set APPLET_ID to include your keyID: Edit build.xml and change APPLET_AID to end in 0x06:<your key>:0x00:0x00. The 0x06 bit is a yubikey-thing. Follow the README file in ykneo-openpgp (that just just cloned from github) to download java card kit 2.2.2 and build using ant. Next install using the following command:
+
 Clone ykneo-opengpg repo
 ------------------------
 
@@ -82,10 +89,6 @@ Install monkeysphere
 
     # sudo apt-get install monkeysphere
 
-Extra credit
-------------
-
-For extra credit, build your own openpgp applet and set APPLET_ID to include your keyID: Edit build.xml and change APPLET_AID to end in 0x06:<your key>:0x00:0x00. The 0x06 bit is a yubikey-thing. Follow the README file in ykneo-openpgp (that just just cloned from github) to download java card kit 2.2.2 and build using ant. Next install using the following command:
 
 ```
 gpshell gpinstall.txt
