@@ -70,6 +70,17 @@ Finally use passwd to remove the passphrase - you're about to load this onto the
 Remember to save the changes whe you exit edit mode. Now its time to prepare your yubikey for receiving the key.
 
 
+
+Clone ykneo-opengpg repo
+------------------------
+
+You need some software.
+
+    # echo $PWD
+    /dev/shm/foo
+    # git clone https://github.com/Yubico/ykneo-openpgp
+
+
 Extra credit
 ------------
 
@@ -82,27 +93,14 @@ gpshell gpinstall.txt
 You'll need gpshell which is part of the gpshell package.
 
 
-### Clone ykneo-opengpg repo
-
-You need some software.
-
-    # echo $PWD
-    /dev/shm/foo
-    # git clone https://github.com/Yubico/ykneo-openpgp
-
-
-### Install monkeysphere
-
-keyParser in the next step uses openpgp2ssh from the monkeysphere package.
-
-    # sudo apt-get install monkeysphere
-
-
-
 Write key to card
 -----------------
 
 You're going to be running keyParser to generate opensc-tool commands that is used to programm the applet. This operation is done 3 times. By unsetting HISTFILE you're preventing the key data from winding up in your shell history.
+
+keyParser uses openpgp2ssh from the monkeysphere package.
+
+    # sudo apt-get install monkeysphere
 
     # unset HISTFILE
     # ./keyParser a <A-usage subkey id> 12345678
