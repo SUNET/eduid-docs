@@ -62,11 +62,11 @@ All applications will publish a Key Management Practice Statement that describe 
 
 ### Central Oversight Authority and Key Materials Managers
 
-The Central Oversight Authority  for the SUNET Key Management Infrastructure is the SUNET CEO who may delegate this authority to the SUNET CISO ("Säkerhetsansvarig") role. Each application will identify an Application Key Materials Manager role which may be held by one or more individuals. Unless otherwize specified the Application Key Materials Manager role is assigned to the Product Manager ("systemförvaltare") of the SUNET service which uses the key(s).
+The Central Oversight Authority  for the SUNET Key Management Infrastructure is the SUNET CEO who may delegate this authority to the SUNET CISO ("Säkerhetsansvarig") role. Each application will identify an Application Key Materials Manager role which may be held by one or more individuals. Unless otherwise specified the Application Key Materials Manager role is assigned to the Product Manager ("systemförvaltare") of the SUNET service which uses the key(s).
 
 ### Key Container Operators
 
-Each Key Container is assigned a set of Key Container operators tasked with technical management of the Key Container. The Key Container Operator role is appointed by the Central Oversight Authority. Each Key Container Operator will be assigned a PGP key on a hardware token to be used for authentication. Each Key Container is also assigned an entry in the Key Container Audit Log (cf below).
+Each Key Container is assigned a set of Key Container operators tasked with technical management of the Key Container. The Key Container Operator role is appointed by the Central Oversight Authority. Each Key Container Operator will be assigned a PGP key on a hardware token to be used for authentication. Each Key Container is also assigned an entry in the Key Container Audit Log (cf. below).
 
 Contact Details
 ---------------
@@ -96,7 +96,7 @@ All Application Key Materials Managers will report on application security to th
 
 ### Key Container Operator
 
-All Key Container Operators will report in Key Container security to the SUNET Central Oversight Authority and will repond to incidents and threats specific to that Key Container.
+All Key Container Operators will report on Key Container security to the SUNET Central Oversight Authority and will respond to incidents and threats specific to that Key Container.
 
 Liability and Financial Responsibility
 ---------
@@ -118,12 +118,12 @@ Publication and Repositories
 
 The SUNET Key Management Policy (this document) along with any applicable Key Management Practice Statement documents is published on the SUNET Key Management Infrastructure website: http://www.sunet.se/kmf
 
-Each application will provide repository where any public artifacts (eg public keys, certificates, CRLs or fingerprints) related to the Key Management Infrastructure is made available. The SUNET Key Management Infrastructure website will provide informational links to each public repository.
+Each application will provide a repository where any public artefacts (eg. public keys, certificates, CRLs or fingerprints) related to the Key Management Infrastructure is made available. The SUNET Key Management Infrastructure website will provide informational links to each public repository.
 
 Confidentiality Policy
 ----------------------
 
-The SUNET Key Management Infrastructure is goverened by Swedish law which regulate information dissemination and confidentiality for all government agencies. The public information principle (SFS 1949:105 §1) states that except under certain specific conditions, all government documents are public. The private keys and any related information, software and configuration used by the SUNET Key Management Infrastructure will be treated as secret information ("sekretess") in the sense of SFS 2009:400 §1 and will not be provided under the public information principle.
+The SUNET Key Management Infrastructure is governed by Swedish law which regulate information dissemination and confidentiality for all government agencies. The public information principle (SFS 1949:105 §1) states that except under certain specific conditions, all government documents are public. The private keys and any related information, software and configuration used by the SUNET Key Management Infrastructure will be treated as secret information ("sekretess") in the sense of SFS 2009:400 §1 and will not be provided under the public information principle.
 
 Intellectual Property Rights
 ----------------------------
@@ -133,7 +133,7 @@ All IPR related to the SUNET Key Management Facility owned by SUNET is made avai
 Identification and Authentication
 =================================
 
-The SUNET Key Management Policy is mainly used to manage infrastructure component keys. Identification is therefore limited to duly designated Key Container Operators and Application Key Materials Managers responsible for key provisionng and application integration. Identification is to be done on the basis of either in-person validation of a government issued identification document (eg passport or drivers license) or in-person verification of another form of credential for individuals whose identity is already well established by other means, for instance by verifying a PGP key fingerprint.
+The SUNET Key Management Policy is mainly used to manage infrastructure component keys. Identification is therefore limited to duly designated Key Container Operators and Application Key Materials Managers responsible for key provisioning and application integration. Identification is to be done on the basis of either in-person validation of a government issued identification document (eg. passport or drivers license) or in-person verification of another form of credential for individuals whose identity is already well established by other means, for instance by verifying a PGP key fingerprint.
 
 Application Key Management Practice Statement documents will describe the detailed key generation, re-generation, revocation and rollover mechanisms as they are application dependent.
 
@@ -152,12 +152,12 @@ When transporting a Key Container it must be protected by a tamper evident bag o
 Key Container Initialization and Access Control
 ------------------------------------
 
-Initialization of a Key Container is the process by which a Key Container is prepared for use. This process must be followd both when a Key Container is received from a vendor or when it is being reused. Key Container initialization must involve a full reset of any data storage device included in the Key Container. The precise details of Key Container Initialization must be described in the Key Management Practice Statement.
+Initialization of a Key Container is the process by which a Key Container is prepared for use. This process must be followed both when a Key Container is received from a vendor and when it is being reused. Key Container initialization must involve a full reset of any data storage device included in the Key Container. The precise details of Key Container Initialization must be described in the Key Management Practice Statement.
 
-All Key Containers must be initialized using equipment and services maintained in the same zone as the Key Container being initialized. Such equipment and services must not have material dependencies on equipment or services outside the zone in a way that may impact the Key Container initialization. Specifically all equpment used must
+All Key Containers must be initialized using equipment and services maintained in the same zone as the Key Container being initialized. Such equipment and services must not have material dependencies on equipment or services outside the zone in a way that may impact the Key Container initialization. Specifically all equipment used must
 
 - be disconnected from anything except a network in the same zone
-- must be provided with a source of true random entropy only available in the same zone
+- must be provided with at least one source of true random entropy only available in the same zone
 - be disconnected from any non-essential peripheral equipment
 - be clearly identified with the zone it belongs to
 
@@ -165,34 +165,34 @@ In addition the following specific requirements apply:
 
 - In the 'black' zone, all wireless and wired network cards must be disabled. 
 - In the 'red' zone all wireless network cards must be disabled.
-- In the 'red' zone network connectivity is permitted
-- In the 'red' zone firewalled connection to the Internet is permitted. 
-- In the 'red' zone only public repository services must be reachable from outside the 'red' zone network. 
+- In the 'red' zone network connectivity is permitted.
+- In the 'red' zone a firewalled connection to the Internet is permitted. 
+- In the 'red' zone only clearly defined services (including SSH) may be reachable from the 'blue' zone network.
 - In the 'blue' zone, both wired and authenticated wireless networks are allowed.
+- In the 'blue' zone, only clearly defined services may be reachable from the Internet.
 
 Certain forms of Key Containers allow a form of virtualization. In this case the virtual Key Containers will be located in the same zone as the parent Key Container. When a Key Container is initialized an audit log covering all activities related to that Key Container is established (cf below). 
 
 Each Key Container is assigned a set of Key Container operators tasked with technical management of the Key Container. The Key Container Operator role is appointed by the Central Oversight Authority. Each Key Container Operator will be assigned a PGP key on a hardware token to be used for authentication. Each Key Container is also assigned an entry in the Key Container Audit Log (cf below).
 
-Access to a Key Container must be restricted to Key Container Operators and the Central Oversight Authority using technical, physical and logical access control. Physical access to Key Containers in the 'red' zone must be restricted using at least 3 indpendent access layers, 1 of which must be available only to the Key Container Operator and to the duly appointed representative of the Key Container Operator. Physical access to Key Containers in the 'black' zone must be restricted using at least 4 independent access layers when not in use, 2 of which must be available only to the Key Container Operator.
+Access to a Key Container must be restricted to Key Container Operators and the Central Oversight Authority using technical, physical and logical access control. Physical access to Key Containers in the 'red' zone must be restricted using at least 3 independent access layers, 1 of which must be available only to the Key Container Operator and to the duly appointed representative of the Key Container Operator. Physical access to Key Containers in the 'black' zone must be restricted using at least 4 independent access layers when not in use, 2 of which must be available only to the Key Container Operator.
 
 Entropy
 -------
 
-Key Generation critically depends on the availability of a good source of true random entropy for the key generator. The entropy source used must be based on a physical process (eg. a source of quantum noise) and must not be a Pseudo Random Number Generator (PRNG). The entropy source must be regularly verified to pass the diehard testsuite. In addition the following requirements apply to the 'black' and 'red' zones:
+Key Generation critically depends on the availability of a good source of true random numbers for the key generator. The entropy source used to derive the random numbers must be based on a physical process (eg. a source of quantum noise) and must not be a Pseudo Random Number Generator (PRNG). The random numbers must be regularly verified to pass the diehard testsuite. In addition the following requirements apply to the 'black' and 'red' zones:
 
-- Entropy in the 'black' zone should not be mixed with a PRNG before use. Exceptions to this rule must be carefully considered and documented.
-- Entropy in the 'red' zone may be mixed with a keyed PRNG before use but the PRNG seed should then be generated by black zone entropy.
+- Entropy in the 'black' zone zone should not pass through a PRNG before use. Exceptions to this rule must be carefully considered and documented.
+- Entropy in the 'red' zone may be turned into random numbers with a CSPRNG (Cryptographically Secure PRNG) before use.
 
 [is this useful and/or practical? /leifj]
 
 Key Generation
 --------------
 
-Normally and if applicable, keys should be generated on the Key Container where it will be used. In certain situations it may be necessary to generate keys on a separate device and transfer to the Key Container. In that case great care must be taken to avoid key leakage. Specifically if: 
+Normally and if applicable, keys should be generated on the Key Container where it will be used. In certain situations it may be necessary to generate keys on a separate device and transfer to the Key Container. In that case great care must be taken to avoid key leakage, especially if the device used is in the 'black' zone. Requirements:
 
-- the device used is in the 'black' zone
-- any intermediate data used during key generation is stored on non-persistent storage (eg a ramdisk)
+- any intermediate data used during key generation is stored on non-persistent storage (eg. a ramdisk)
 - any intermediate data used during key generation is cleared after use
 
 Also note the requirements on Entropy above.
