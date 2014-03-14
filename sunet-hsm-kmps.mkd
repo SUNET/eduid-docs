@@ -1,0 +1,124 @@
+% SUNET Assymetric HSM Service KMPS
+% Leif Johansson
+% 2014-01-06
+
+Introduction
+============
+
+This document is the key management practice statement for the SUNET Assymetric HSM Service relative to the SUNET Key Management Policy (SUNET KMP). Note that this document does not a KMPS for all services using the HSM Service although by technical necessity the choices for which technical controls are implemented at the application level is restricted by the technical choices for the HSM Service. Such limitations are called out below.
+
+Terminology
+===========
+
+- SUNET KMP: Key Management Policy - a document describing the SUNET KMF.
+- SUNET KMF: Key Management Facility - the combination of procedures and resources covered by the SUNET KMP.
+- PED: Secure path authentication terminal used by Luna HSMs
+- PED Key: Secure path authentication token used by Luna HSMs
+- Partition: Logical PKCS11-device in an HSM. A partition may contain multiple keys.
+- Domain: Logical administrative separation in Luna HSMs, contains multiple Partitions
+- Zone: An area of protection of the KMF.
+- HSM Appliance: The server physically enclosing the cryptograhic engine of the HSM
+- Service: A logical set of clients of the HSM sharing a single partition.
+- Service KMPS: The Key Management Practice Statement of a Service.
+- Client: A credential used to identitify and authenticate a connection to an HSM partition.
+
+Service Description
+===================
+
+The SUNET Assymetric HSM Service operates a virtualiazable HSM environment based on clustered Luna SA network HSM for use by other services. Each connected service is assigned a partition in the HSM and communicate with the HSM cluster with TLS tunnels. 
+
+In addition to the network HSMs the services operates protected backup of HSM partitions using special offline Backup HSMs. In terms of the SUNET KMP the HSMs are zoned as follows:
+
+- The Network HSMs are operating in RED zone (cf SUNET KMP)
+- The Backup HSMs are operating in BLACK zone (cf SUNET KMP)
+
+Logical Access Control
+-------------------
+
+The following logical protections are in place for the HSM environment:
+
+- network-level access control implemented in Juniper SRX firewalls set to a default-deny policy for both incoming and outgoing connections.
+- all HSMs are connected to a management network which allows connection of an HSM management laptop for use with remote PED.
+- TLS-based access control for PKCS11 access to the HSM cluster nodes tying each client certificate to a single partition.
+- PED-based authentication for all HSM, Domain and Partition operations
+- M-by-N in place for all HSM, Domain and Partition operations
+
+Physical Access Control
+--------------------
+
+The HSM cluster is located in 2 sites: TUG and FRE. At TUG the 3 levels of physical protection for the network HSMs specified by the SUNET KMP are: outer door, data center door and rack door. Each door is locked and only SUNET and auhtorized NUNOC personel have access to keys and/or RF access tags required to open the door(s). The Backup HSMs are stored in safes mounted in the same racks as the network HSMs. The safe door constitutes the BLACK zone 4th level of physical protection.
+
+Environmental Controls
+----------------------
+
+HSMs are located in datacenters equiped with fire-suppression, intrusion detection and alarms, and electronic door access control.
+
+Roles and Responsabilities
+==========================
+
+Key Container Operator
+----------------------
+
+The HSM Key Container Operator (KCO) is a system administratrator role. The KCO is able to SSH to the HSM appliance and will have access to an Orange Remote PED Key and a Purple Resplit Key. These keys (Orange and Purple) will not use MbyN but will be duplicated in 3 copies which will be stored in separate safes in tamper-evident bags between use.
+
+Security Officer
+----------------
+
+The HSM Service Security Officer (SO) is a role split over several trusted employees of SUNET and NUNOC. The SO will share (in a 3by7 configuration) HSM Admin and HSM SO Domain keysets. These keys will be stored in individual compartments in tamper-evident bags in a locked safe between use.
+
+Procedures
+==========
+
+All procedures described below must be performed in such a way that logs are kept. If at any step, a fault or unexpected event occurs that can call the security of the process into question, the process must be terminated and incident management must be initialized.
+
+Extract from SAFE
+---------------
+
+Before using a cryptographic key component stored in the SAFE (eg a PED key or a backup HSM) the authenticity of the device must be verified against the signed KMF log:
+
+1. Extract the tamper-evident bag which contains the item from the SAFE. Depending on the way the item was stored this may involve opening the SAFE and possibly opening an inner compartment with a SO compartment key.
+2. Locate the last log entry in the KMF log where this item was used. 
+3. Compare the serial number on the tamper-evident bag with the serial number in the KMF log entry.
+4. Open the bag and extract the item.
+
+Deposit to SAFE
+------------
+
+The SAFE deposit procedure is the inverse of the SAFE Extraction procedure:
+
+1. Find an unused tamper-evident bag.
+2. Put the item in the bag and seal it.
+3. Record the serial number on the bag in the KMF log associated with the item in question.
+4. Sign the KMF log and put the bag in the proper place in the SAFE.
+
+HSM Shiping Verification
+------------------------
+
+1. A KCO together with at least one SO acting as witness assembles and unpacks the shipping container. 
+2. The KCO locates the Shipping Confirmation notice (email) and compares the following information against the Shipment Confirmation: HSM serial number, HSM shipping tamper bag seal serial and HSM tamper seal serials. The KCO also verifies that all tamper seals are intact and unbroken.
+3. The KCO commits a copy of the Shipment Confirmation to the log and signs the log.
+
+HSM Appliance Configuration
+---------------------------
+
+1. Assemble a KCO and at least one SO acting as witness.
+1. The KCO performs required configuration actions. All actions are documented in the log and signed by the KCO. 
+
+HSM Deployment
+--------------
+
+1. Assemble 3 SOs present in the TUG office along with at least one KCO who will act as a notary responsible for recording and logs.
+2. _Extract_ the SO keychains, PED laptop and the Orange Remote PED key from the SAFE (cf above). If this is the first HSM in an HSM group or the first HSM proper there are no existing PED keys of any color and the KCO instead extracts a box of empty PED keys from the SAFE.
+3. Perform the necessary steps to initialize the HSM.
+4. _Deposit_ the SO keychains, PED laptop and the Orange Remote PED key to the SAFE.
+
+Provisioning a Service
+----------------------
+
+1. Assemble 3 SOs present in the TUG office along with at least one KCO who will act as a notary responsible for recording and logs.
+2. _Extract_ the HSM service console laptop and Orange Remote PED key.
+3. The KCO boots the KCO laptop, connect it to the HSM management network, connects the PED and authenticates the remote PED server using the Orange Remote PEM key.
+4. The KCO verifies connection to the HSM by logging in as HSM admin and activate the remote PED.
+5. _Extract_ the SO keychains
+6. Perform the necessary steps to create a partition and associated domain. This may involve initializing additional PED keys depending on the service KMPS. If the service KMPS specifies that the SUNET HSM KMPS Security Officers act as Security Officers for the service then the SO keychains may be re-used for the service, otherwize a set of PED keys should be created.
+7. _Deposity_ the SO keychains, KCO laptop and Orange Remote PED key.
