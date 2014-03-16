@@ -5,7 +5,7 @@
 Introduction
 ============
 
-This document is the key management practice statement for the SUNET Assymetric HSM Service relative to the SUNET Key Management Policy (SUNET KMP). Note that this document does not a KMPS for all services using the HSM Service although by technical necessity the choices for which technical controls are implemented at the application level is restricted by the technical choices for the HSM Service. Such limitations are called out below.
+This document is the key management practice statement for the SUNET Assymetric HSM Service relative to the SUNET Key Management Policy (SUNET KMP). Note that this document does not specify a KMPS for all services using the HSM Service although by technical necessity the choices for which technical controls are implemented at the application level is restricted by the technical choices for the HSM Service. Such limitations are called out below.
 
 Terminology
 ===========
@@ -64,7 +64,7 @@ The HSM Key Container Operator (KCO) is a system administratrator role. The KCO 
 Security Officer
 ----------------
 
-The HSM Service Security Officer (SO) is a role split over several trusted employees of SUNET and NUNOC. The SO will share (in a 3by7 configuration) HSM Admin and HSM SO Domain keysets. These keys will be stored in individual compartments in tamper-evident bags in a locked safe between use.
+The HSM Service Security Officer (SO) is the Application Key Materials Manager (cf KMP) for the HSM service. It is a role split over several trusted employees of SUNET and NUNOC. The SO will share (in a 3by7 configuration) HSM Admin and HSM SO Domain keysets. These keys will be stored in individual compartments in tamper-evident bags in a locked safe between use.
 
 Procedures
 ==========
@@ -72,7 +72,7 @@ Procedures
 All procedures described below must be performed in such a way that logs are kept. If at any step, a fault or unexpected event occurs that can call the security of the process into question, the process must be terminated and incident management must be initialized.
 
 Extract from SAFE
----------------
+-----------------
 
 Before using a cryptographic key component stored in the SAFE (eg a PED key or a backup HSM) the authenticity of the device must be verified against the signed KMF log:
 

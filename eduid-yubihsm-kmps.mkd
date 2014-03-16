@@ -1,0 +1,101 @@
+% eduID YubiHSM KMPS
+% Leif Johansson & Fredrik Thulin
+% 2014-03-16
+
+Introduction
+============
+
+This document is the key management practice statement for the eduID YubiHSM symetric key containers relative to the SUNET Key Management Policy (SUNET KMP). 
+
+Terminology
+===========
+
+- SUNET KMP: Key Management Policy - a document describing the SUNET KMF.
+- SUNET KMF: Key Management Facility - the combination of procedures and resources covered by the SUNET KMP.
+- eduID: The SWAMID student and scolarship identity provider
+
+Service Description
+===================
+
+The eduID YubiHSM symmetric key containers provide keyed HMAC-SHA1 for use by OATH OTP and VCCS password servicess. Each YubiHSM is connected to a server in the RED zone when in operation and is provisioned with keys in the BLACK Zone.
+
+Logical Access Control
+----------------------
+
+When in operation the YubiHSMs are connected to RED zone servers and access is restricted by logical access control applied on a host level.
+
+Physical Access Control
+-----------------------
+
+The YubiHSMs are stored in BLACK zone safe when not in use. The YubiHSMs are provisioned using a programming station (PS) laptop which has been modified to reduce the external attack surface. This includes the following steps:
+
+- all wifi cards have been removed or disabled
+- all wifi antennas have been removed or disabled
+- all bluetooth or other radio transcievers have been removed or disabled
+
+Environmental Controls
+----------------------
+
+HSMs are located in datacenters equiped with fire-suppression, intrusion detection and alarms, and electronic door access control.
+
+
+Roles and Responsabilities
+==========================
+
+Security Officer
+----------------
+
+The Security Office the Application Key Materials Manager (cf KMP) for the YubiHSM service. It is a role delegated from the SUNET CISO to trusted employees of SUNET and NUNOC. The SO will have access to the PS and therefore will have access to key backups.
+
+Procedures
+==========
+
+Extract from SAFE
+-----------------
+
+Before using a cryptographic key component stored in the SAFE (eg a YubiHSM or a yubikey) the authenticity of the device must be verified against the signed KMF log:
+
+1. Extract the tamper-evident bag which contains the item from the SAFE. Depending on the way the item was stored this may involve opening the SAFE and possibly opening an inner compartment with a SO compartment key.
+2. Locate the last log entry in the KMF log where this item was used.
+3. Compare the serial number on the tamper-evident bag with the serial number in the KMF log entry.
+4. Open the bag and extract the item.
+
+Deposit to SAFE
+------------
+
+The SAFE deposit procedure is the inverse of the SAFE Extraction procedure:
+
+1. Find an unused tamper-evident bag.
+2. Put the item in the bag and seal it.
+3. Record the serial number on the bag in the KMF log associated with the item in question.
+4. Sign the KMF log and put the bag in the proper place in the SAFE.
+
+
+PS Setup
+--------
+
+SO Enrollment
+-------------
+
+Each YubiHSM SO has a yubikey in static mode which in combination with a personal password (salt) is used to enable full disk encryption on the PS.
+
+
+Initialize PS
+-------------
+
+1. A Security Officer (SO) retrieves the programming station from the BLACK zone safe. The SO will remain in sight of the PS throughout the process.
+2. The laptop is oriented so as not to face cameras or windows. 
+3. The SO uses a yubikey+password (salt) to unlock full disk encryption on the PS during PS boot/startup.
+
+Key Generation
+--------------
+
+Assemble a KCO and a SO present in the office. The KCO is responsible for key operations and the KMF log.
+
+1. Use the "Initialize PS" procedure to prepare the PS for use.
+2. The KCO uses the "Extract from SAFE" procedure to retrieve the PKCS#11 token from private storage in the BLACK zone safe.
+3. Key Container Operator uses PKCS#11 token to log in as user 'vccs' and decrypt the home directory. PIN code to PKCS#11 token should be memorized by KCO.
+4. YubiHSM Symmetric key management is performed using the program `vccs-configure-hsms'.
+5. The Key database file is encrypted using the GPG public key of the key escrow smartcard. This smartcard is to be held by SUNET CISO, but NOT to be stored in the same safe.
+6. Laptop is shut down and again placed in the safe by the sO.
+7. The KCO PKCS#11 token is returned to BLACK zone storage by the "Deposit to SAFE" procedure.
