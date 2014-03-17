@@ -94,21 +94,21 @@ The SAFE deposit procedure is the inverse of the SAFE Extraction procedure:
 HSM Shiping Verification
 ------------------------
 
-1. A KCO together with at least one SO acting as witness assembles and unpacks the shipping container. 
-2. The KCO locates the Shipping Confirmation notice (email) and compares the following information against the Shipment Confirmation: HSM serial number, HSM shipping tamper bag seal serial and HSM tamper seal serials. The KCO also verifies that all tamper seals are intact and unbroken.
-3. The KCO commits a copy of the Shipment Confirmation to the log and signs the log.
+1. A KCO or an SO together with at least one SO acting as witness assembles and unpacks the shipping container. 
+2. The KCO/SO locates the Shipping Confirmation notice (email) and compares the following information against the Shipment Confirmation: HSM serial number, HSM shipping tamper bag seal serial and HSM tamper seal serials. The KCO/SO also verifies that all tamper seals are intact and unbroken.
+3. The KCO/SO commits a copy of the Shipment Confirmation to the KMF log.
 
 HSM Appliance Configuration
 ---------------------------
 
 1. Assemble a KCO and at least one SO acting as witness.
-1. The KCO performs required configuration actions. All actions are documented in the log and signed by the KCO. 
+1. The KCO performs required configuration actions. All actions are signed into the KMF log.
 
 HSM Deployment
 --------------
 
-1. Assemble 3 SOs present in the TUG office along with at least one KCO who will act as a notary responsible for recording and logs.
-2. _Extract_ the SO keychains, PED laptop and the Orange Remote PED key from the SAFE (cf above). If this is the first HSM in an HSM group or the first HSM proper there are no existing PED keys of any color and the KCO instead extracts a box of empty PED keys from the SAFE.
+1. Assemble 3 SOs present in the TUG office along with at least one KCO who will act as a notary responsible for the KMF log.
+2. _Extract_ the SO keychains, PED laptop and the Orange Remote PED key from the SAFE (cf above). If this is the first HSM in an HSM group or the first HSM proper there are no existing PED keys of any color and the KCO instead extracts a box of empty PED keys from the BLACK zone SAFE.
 3. Perform the necessary steps to initialize the HSM.
 4. _Deposit_ the SO keychains, PED laptop and the Orange Remote PED key to the SAFE.
 
