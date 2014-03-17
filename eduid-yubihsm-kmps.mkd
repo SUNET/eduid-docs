@@ -5,7 +5,7 @@
 Introduction
 ============
 
-This document is the key management practice statement for the eduID YubiHSM symetric key containers relative to the SUNET Key Management Policy (SUNET KMP). 
+This document is the key management practice statement for the eduID YubiHSM symetric key containers relative to the SUNET Key Management Policy (SUNET KMP).
 
 Terminology
 ===========
@@ -17,7 +17,7 @@ Terminology
 Service Description
 ===================
 
-The eduID YubiHSM symmetric key containers provide keyed HMAC-SHA1 for use by OATH OTP and VCCS password servicess. Each YubiHSM is connected to a server in the RED zone when in operation and is provisioned with keys in the BLACK Zone.
+The eduID YubiHSM symmetric key containers provide keyed HMAC-SHA1 for use by OATH OTP and VCCS password services. Each YubiHSM is connected to a server in the RED zone when in operation and is provisioned with keys in the BLACK Zone.
 
 Logical Access Control
 ----------------------
@@ -32,11 +32,12 @@ The YubiHSMs are stored in BLACK zone safe when not in use. The YubiHSMs are pro
 - all wifi cards have been removed or disabled
 - all wifi antennas have been removed or disabled
 - all bluetooth or other radio transcievers have been removed or disabled
+- all cameras, microphones and speakers have been removed or disabled
 
 Environmental Controls
 ----------------------
 
-HSMs are located in datacenters equiped with fire-suppression, intrusion detection and alarms, and electronic door access control.
+HSMs are located in datacenters equipped with fire-suppression, intrusion detection and alarms, and electronic door access control.
 
 
 Roles and Responsabilities
@@ -45,7 +46,7 @@ Roles and Responsabilities
 Security Officer
 ----------------
 
-The Security Office the Application Key Materials Manager (cf KMP) for the YubiHSM service. It is a role delegated from the SUNET CISO to trusted employees of SUNET and NUNOC. The SO will have access to the PS and therefore will have access to key backups.
+The Security Office is the Application Key Materials Manager (cf KMP) for the YubiHSM service. It is a role delegated from the SUNET CISO to trusted employees of SUNET and NUNOC. The SO will have access to the PS and therefore will have access to key backups. Dual control is employed to restrict SO from physically accessing the PS alone.
 
 Procedures
 ==========
@@ -84,7 +85,7 @@ Initialize PS
 -------------
 
 1. A Security Officer (SO) retrieves the programming station from the BLACK zone safe. The SO will remain in sight of the PS throughout the process.
-2. The laptop is oriented so as not to face cameras or windows. 
+2. The laptop is oriented so as not to face cameras or windows.
 3. The SO uses a yubikey+password (salt) to unlock full disk encryption on the PS during PS boot/startup.
 
 Key Generation
@@ -97,5 +98,5 @@ Assemble a KCO and a SO present in the office. The KCO is responsible for key op
 3. Key Container Operator uses PKCS#11 token to log in as user 'vccs' and decrypt the home directory. PIN code to PKCS#11 token should be memorized by KCO.
 4. YubiHSM Symmetric key management is performed using the program `vccs-configure-hsms'.
 5. The Key database file is encrypted using the GPG public key of the key escrow smartcard. This smartcard is to be held by SUNET CISO, but NOT to be stored in the same safe.
-6. Laptop is shut down and again placed in the safe by the sO.
+6. Laptop is shut down and again placed in the safe by the SO.
 7. The KCO PKCS#11 token is returned to BLACK zone storage by the "Deposit to SAFE" procedure.
