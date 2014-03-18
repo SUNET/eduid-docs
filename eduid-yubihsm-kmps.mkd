@@ -33,6 +33,8 @@ The YubiHSMs are stored in BLACK zone safe when not in use. The YubiHSMs are pro
 - all wifi antennas have been removed or disabled
 - all bluetooth or other radio transcievers have been removed or disabled
 - all cameras, microphones and speakers have been removed or disabled
+- all Ethernet ports have been removed or disabled
+- the PS does not support Firewire or docking station ports
 
 Environmental Controls
 ----------------------
@@ -75,10 +77,10 @@ The SAFE deposit procedure is the inverse of the SAFE Extraction procedure:
 PS Setup
 --------
 
-SO Enrollment
--------------
+KCO Enrollment
+--------------
 
-Each YubiHSM SO has a yubikey in static mode which in combination with a personal password (salt) is used to enable full disk encryption on the PS.
+Each YubiHSM KCO has a YubiKey in static mode which in combination with a personal password (salt) is used to enable full disk encryption on the PS.
 
 
 Initialize PS
@@ -86,17 +88,50 @@ Initialize PS
 
 1. A Security Officer (SO) retrieves the programming station from the BLACK zone safe. The SO will remain in sight of the PS throughout the process.
 2. The laptop is oriented so as not to face cameras or windows.
-3. The SO uses a yubikey+password (salt) to unlock full disk encryption on the PS during PS boot/startup.
+3. The KCO uses a yubikey+password (salt) to unlock Full Disk Encryption on the PS during PS boot/startup.
 
 Key Generation
 --------------
 
-Assemble a KCO and a SO present in the office. The KCO is responsible for key operations and the KMF log.
+Assemble a KCO and an SO present in the office. The KCO is responsible for key operations and the SO is responsible for KMF log.
 
 1. Use the "Initialize PS" procedure to prepare the PS for use.
-2. The KCO uses the "Extract from SAFE" procedure to retrieve the PKCS#11 token from private storage in the BLACK zone safe.
-3. Key Container Operator uses PKCS#11 token to log in as user 'vccs' and decrypt the home directory. PIN code to PKCS#11 token should be memorized by KCO.
+2. The KCO uses the "Extract from SAFE" procedure to retrieve the Full Disk Encryption (FDE) token (YubiKey in static password mode) from private storage in the BLACK zone safe.
+3. The KCO uses the FDE token to bring PS online and log in as user 'root'. A part of the FDE key (salt) should be memorized by KCO and not stored in the SAFE.
 4. YubiHSM Symmetric key management is performed using the program `vccs-configure-hsms'.
-5. The Key database file is encrypted using the GPG public key of the key escrow smartcard. This smartcard is to be held by SUNET CISO, but NOT to be stored in the same safe.
-6. Laptop is shut down and again placed in the safe by the SO.
-7. The KCO PKCS#11 token is returned to BLACK zone storage by the "Deposit to SAFE" procedure.
+5. The Key database file is encrypted using the GPG public key of the SO ESCROW smartcards. The encrypted backup is put on the KCO's BACKUP USB memory, and stored in a tamper-proof bag in the KCO's compartment in the SAFE.
+6. PS is shut down and again placed in the SAFE by the SO.
+7. The KCO FDE token is returned to BLACK zone storage by the "Deposit to SAFE" procedure.
+
+
+
+
+Dual control
+============
+
+Task: Activate PS
+-----------------
+1. SO extracts PS from SAFE
+2. KCO unlocks FDE using KCO YubiKey+password (salt) (YubiKey stored in KCO compartment of SAFE)
+
+Task: Generate HMAC keys
+------------------------
+1. SO monitors everything and manages KMF log
+2. KCO operates PS. Unlocks YubiHSM using YubiHSM Master Key
+
+Task: HMAC key backup
+---------------------
+1. SO controls SO GPG private key. This key is stored on YubiHSM NEO that is kept in SO compartment of SAFE
+2. KCO controls backup USB memory, stored in KCO compartment of SAFE
+
+Task: Physically install PS in small safes on-site
+--------------------------------------------------
+1. SO unlocks SAFE
+2. KCO retrieves taper-proof bag with YubiHSM for specific site from KCO compartment in SAFE
+3. NUNOC transports tamper-proof bag to site
+4. KCO unlocks small safe on-site
+
+Task: Restore HMAC keys
+-----------------------
+1. KCO retreives backup USB memory stored in KCO compartment of SAFE
+2. SO decrypts backup using GPG private key stored on YubiKey NEO kept in SO compartment of SAFE
