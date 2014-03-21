@@ -1,0 +1,85 @@
+% eduID SSH jumping manual
+% Fredrik Thulin
+% 2014-03-21
+
+Introduction
+============
+
+To remote administer a server that does not allow SSH access from arbitrary networks, the following setup can be used.
+
+This setup uses the program 'tsocks' that does ld.so preload intercept of the connect(2) syscall, to transparently
+tunnel it through an SSH connection with SOCKS forwarding enabled. If SSH access to a certain host should ALWAYS
+be tunneled, SSH client configuration options can be used instead of tsocks.
+
+Step 1a
+=======
+
+To always SSH jump using SOCKS, edit ~/.ssh/config
+
+  Host jump
+  HostName your-jump-host
+  User your-username
+  PubKeyAuthentication yes
+  DynamicForward localhost:9999
+  ServerAliveInterval 120
+  KeepAlive yes
+
+  Host *.eduid.se. *.eduid.se
+  ProxyCommand=/bin/nc -X 5 -x localhost:9999 %h %p
+  User root
+
+
+Step 1b
+=======
+
+To choose in runtime whether to SSH jump or connect directly, edit ~/.ssh/config
+
+  Host jump
+  HostName your-jump-host
+  User your-username
+  PubKeyAuthentication yes
+  DynamicForward localhost:9999
+  ServerAliveInterval 120
+  KeepAlive yes
+
+  Host *.eduid.se *.eduid.se.
+  PubKeyAuthentication yes
+
+Install and configure 'tsocks'
+
+  $ apt-get install tsocks
+
+Edit /etc/tsocks.conf
+
+  server = 127.0.0.1
+  server_type = 5
+  server_port = 9999
+
+
+Step 2 (every morning)
+======================
+
+Set up a single SSH connection to the jump host, and enable SOCKS forwarding. Use 'ping localhost' to
+continuously generate traffic, to keep even the most aggressive NAT/firewall in the path happy.
+
+  $ ssh jump ping localhost
+
+
+Step 3
+======
+
+If 1a was used, nothing special needs to be done as long as the SSH connection from step 2 is alive.
+
+  $ ssh some-eduid-server
+
+or
+
+  $ ./bump-tag
+
+If 1b was used, connect to a server using the SSH tunneled SOCKS proxy by prefixing any normal command with 'tsocks':
+
+  $ tsocks ssh some-eduid-server
+
+or
+
+  $ tsocks ./bump-tag
