@@ -31,6 +31,13 @@ From the factory the yubikey is setup only as a standard/classical OTP device. R
 
     # ykpersonalize -m82
 
+If you failed to resist the temptation of CCID-mode you can expert-mode hack your NEO back to HID mode using this command:
+
+    $ opensc-tool -s '00 a4 04 00 07 a0 00 00 05 27 20 01 01' -s '00 01 11 00'
+
+or, alledgedly, using the ykneomgr application found at http://opensource.yubico.com/libykneomgr/
+
+
 Generate key
 ------------
 
@@ -74,6 +81,9 @@ Finally use passwd to remove the passphrase - you're about to load this onto the
 
 Remember to save the changes whe you exit edit mode. Now its time to prepare your yubikey for receiving the key.
 
+You will also need to save your public key somewhere, so you can import it in your real GPG keyring. Something like
+
+    $ gpg --armor --export $id > ~/my-NEO-public-key.asc
 
 
 Clone ykneo-opengpg repo
