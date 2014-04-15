@@ -23,6 +23,11 @@ Install ykpersonalize
 ---------------------
 
     # sudo apt-get install yubikey-personalization
+    
+Install Smart card daemon
+-------------------------
+
+    # sudo apt-get install scdaemon
 
 Set yubikey in CCID+HID-mode
 ----------------------------
@@ -99,7 +104,13 @@ You need some software.
 Extra credit
 ------------
 
-For extra credit, build your own openpgp applet and set APPLET_ID to include your keyID: Edit build.xml and change APPLET_AID to end in 0x06:<your key>:0x00:0x00. The 0x06 bit is a yubikey-thing. Follow the README file in ykneo-openpgp (that just just cloned from github) to download java card kit 2.2.2 and build using ant. Next install using the following command:
+For extra credit, build your own openpgp applet and set APPLET_ID to include your keyID: Edit build.xml and change APPLET_AID to end in 0xFF:0x00:[your key]:0x00:0x00. The 0xFF bit is to use an unmanaged range.
+
+Example with the key above would be (key id 662D4043),
+
+    <property name="APPLET_AID" value="0xd2:0x76:0x00:0x01:0x24:0x01:0x02:0x00:0xFF:0x00:0x66:0x2D:0x40:0x43:0x00:0x00" />
+
+Follow the README file in ykneo-openpgp (that just just cloned from github) to download java card kit 2.2.2 and build using ant. Next install using the following command:
 
 ```
 gpshell gpinstall.txt
