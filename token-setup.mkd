@@ -24,12 +24,17 @@ Install ykpersonalize
 
     # sudo apt-get install yubikey-personalization
     
+Install Gnupg2
+-------------------------
+
+    # sudo apt-get install gnupg2
+    
 Install Smart card daemon
 -------------------------
 
     # sudo apt-get install scdaemon
     
-Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to change username and hostname.
+Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to change username and hostname and check the path to scdaemon.
 
     scdaemon-program /usr/lib/x86_64-linux-gnu/gnupg2/scdaemon
     #
