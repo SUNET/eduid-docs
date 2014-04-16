@@ -72,6 +72,32 @@ If you want to use the token in a virtual machine (VMWare Fusion) when running O
 
     # ykpersonalize -m81
 
+Setup user access to the yubikey USB device
+-------------------------------------------
+
+/etc/udev/rules.d/69-yubikey.rules
+
+    ACTION!="add|change", GOTO="yubico_end"
+
+    # Udev rules for letting the console user access the Yubikey USB
+    # device node, needed for challenge/response to work correctly.
+
+    # Yubico Yubikey II
+    ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111", \
+    ENV{ID_SECURITY_TOKEN}="1"
+
+    LABEL="yubico_end"
+    
+/etc/udev/rules.d/70-yubikey.rules
+
+    # Udev rules for letting the console user access the Yubikey USB
+    # device node, needed for challenge/response to work correctly.
+
+    ACTION=="add|change", SUBSYSTEM=="usb", \
+      ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111", \
+      TEST=="/var/run/ConsoleKit/database", \
+      RUN+="udev-acl --action=$env{ACTION} --device=$env{DEVNAME}"
+
 Generate key
 ------------
 
