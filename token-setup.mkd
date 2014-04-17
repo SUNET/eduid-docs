@@ -169,10 +169,6 @@ gpshell gpinstall.txt
 
 You'll need gpshell which is part of the gpshell package.
 
-If you get an error, try restarting pcsdc.
-
-    sudo service pcscd restart
-
 
 Write key to card
 -----------------
@@ -189,6 +185,16 @@ Approximate instructions from memory :
     gpg> key 1
     gpg> key 2
     gpg> keytocard
+    
+During this stage it is very important that only a gpg-agent with version >=2.0.22 is running. If you get errors like
+
+    gpg: error writing key to card: Not supported
+    
+it is probably not the right gpg-agent that is currently running. Kill any gpg-agent process and look in
+
+    /etc/X11/Xsession.d/90gpg-agent
+    
+how to restart it with a gpg-agent binary that you are sure is 2.0.22.
 
 
 Write key to card - the OLD way
