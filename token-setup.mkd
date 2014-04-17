@@ -45,7 +45,7 @@ Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to change usernam
 
 Add the following to $HOME/.profile or equivalent.
 
-    ${GNUPGHOME=$HOME/.gnupg}
+    GNUPGHOME=$HOME/.gnupg
     if [ -f "${GNUPGHOME}/gpg-agent-info-$(hostname)" ]; then
         . "${GNUPGHOME}/gpg-agent-info-$(hostname)"
         export GPG_AGENT_INFO
