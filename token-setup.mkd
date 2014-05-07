@@ -27,7 +27,7 @@ Install ykpersonalize
 Install Gnupg2
 -------------------------
 
-    # sudo apt-get install gnupg2
+    # sudo apt-get install gnupg2 gnupg-agent gpgsm
     
 Install Smart card daemon
 -------------------------
