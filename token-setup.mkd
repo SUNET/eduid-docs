@@ -23,6 +23,37 @@ Install ykpersonalize
 ---------------------
 
     # sudo apt-get install yubikey-personalization
+    
+Install Gnupg2
+-------------------------
+
+    # sudo apt-get install gnupg2
+    
+Install Smart card daemon
+-------------------------
+
+    # sudo apt-get install scdaemon
+    
+Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to change username and hostname and check the path to scdaemon.
+
+    scdaemon-program /usr/lib/x86_64-linux-gnu/gnupg2/scdaemon
+    #
+    enable-ssh-support
+    log-file /dev/shm/gpg-agent.log
+    debug guru
+    write-env-file "/home/[username]/.gnupg/gpg-agent-info-[hostname]"
+
+Add the following to $HOME/.profile or equivalent.
+
+    GNUPGHOME=$HOME/.gnupg
+    if [ -f "${GNUPGHOME}/gpg-agent-info-$(hostname)" ]; then
+        . "${GNUPGHOME}/gpg-agent-info-$(hostname)"
+        export GPG_AGENT_INFO
+        export SSH_AUTH_SOCK
+        export SSH_AGENT_PID
+    fi
+    GPG_TTY=$(tty)
+    export GPG_TTY
 
 Set yubikey in CCID+HID-mode
 ----------------------------
@@ -37,6 +68,35 @@ If you failed to resist the temptation of CCID-mode you can expert-mode hack you
 
 or, alledgedly, using the ykneomgr application found at http://opensource.yubico.com/libykneomgr/
 
+If you want to use the token in a virtual machine (VMWare Fusion) when running OS X you can't use HID mode.
+
+    # ykpersonalize -m81
+
+Setup user access to the yubikey USB device
+-------------------------------------------
+
+/etc/udev/rules.d/69-yubikey.rules
+
+    ACTION!="add|change", GOTO="yubico_end"
+
+    # Udev rules for letting the console user access the Yubikey USB
+    # device node, needed for challenge/response to work correctly.
+
+    # Yubico Yubikey II
+    ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111", \
+    ENV{ID_SECURITY_TOKEN}="1"
+
+    LABEL="yubico_end"
+    
+/etc/udev/rules.d/70-yubikey.rules
+
+    # Udev rules for letting the console user access the Yubikey USB
+    # device node, needed for challenge/response to work correctly.
+
+    ACTION=="add|change", SUBSYSTEM=="usb", \
+      ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111", \
+      TEST=="/var/run/ConsoleKit/database", \
+      RUN+="udev-acl --action=$env{ACTION} --device=$env{DEVNAME}"
 
 Generate key
 ------------
@@ -75,11 +135,7 @@ Pick RSA (set your own capabilities) and toggle S & E & A which should result in
     [ unknown] (2)  Leif Johansson <leifj@mnt.se>
     [ unknown] (3). Leif Johansson <leifj@sunet.se>
 
-Finally use passwd to remove the passphrase - you're about to load this onto the yubikey.
-
-    gpg> passwd
-
-Remember to save the changes whe you exit edit mode. Now its time to prepare your yubikey for receiving the key.
+Remember to save the changes whe you exit edit mode.
 
 You will also need to save your public key somewhere, so you can import it in your real GPG keyring. Something like
 
@@ -99,7 +155,13 @@ You need some software.
 Extra credit
 ------------
 
-For extra credit, build your own openpgp applet and set APPLET_ID to include your keyID: Edit build.xml and change APPLET_AID to end in 0x06:<your key>:0x00:0x00. The 0x06 bit is a yubikey-thing. Follow the README file in ykneo-openpgp (that just just cloned from github) to download java card kit 2.2.2 and build using ant. Next install using the following command:
+For extra credit, build your own openpgp applet and set APPLET_ID to include your keyID: Edit build.xml and change APPLET_AID to end in 0xFF:0x00:[your key]:0x00:0x00. The 0xFF bit is to use an unmanaged range.
+
+Example with the key above would be (key id 662D4043),
+
+    <property name="APPLET_AID" value="0xd2:0x76:0x00:0x01:0x24:0x01:0x02:0x00:0xFF:0x00:0x66:0x2D:0x40:0x43:0x00:0x00" />
+
+Follow the README file in ykneo-openpgp (that just just cloned from github) to download java card kit 2.2.2 and build using ant. Next install using the following command:
 
 ```
 gpshell gpinstall.txt
@@ -115,9 +177,24 @@ The best way to get the secret key installed in the NEO is to use GPG >= 2.0.22.
 
 Approximate instructions from memory :
 
-    # gpg --edit-key $id
+    # gpg2 --edit-key $id
     gpg> toggle
     gpg> keytocard
+    gpg> key 1
+    gpg> keytocard
+    gpg> key 1
+    gpg> key 2
+    gpg> keytocard
+    
+During this stage it is very important that only a gpg-agent with version >=2.0.22 is running. If you get errors like
+
+    gpg: error writing key to card: Not supported
+    
+it is probably not the right gpg-agent that is currently running. Kill any gpg-agent process and look in
+
+    /etc/X11/Xsession.d/90gpg-agent
+    
+how to restart it with a gpg-agent binary that you are sure is 2.0.22.
 
 
 Write key to card - the OLD way
@@ -127,6 +204,10 @@ If you really can't use a new enough version of GPG to write the generated key t
 if you do (probably due to a bug somewhere in keyParser) - verify sign, decrypt and authentication usage after programming.
 
 You're going to be running keyParser to generate opensc-tool commands that is used to programm the applet. This operation is done 3 times. By unsetting HISTFILE you're preventing the key data from winding up in your shell history.
+
+Use passwd to remove the passphrase for the key - you're about to load this onto the yubikey.
+
+    gpg> passwd
 
 keyParser uses openpgp2ssh from the monkeysphere package.
 
