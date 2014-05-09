@@ -27,6 +27,12 @@ Install ykpersonalize
 Install Gnupg2
 -------------------------
 
+### Mac OS X
+
+Download and install GPGSuite from https://gpgtools.org/
+
+### Ubuntu
+    
     # sudo apt-get install gnupg2 gnupg-agent gpgsm
     
 Install Smart card daemon
@@ -43,6 +49,12 @@ Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to change usernam
     debug guru
     write-env-file "/home/[username]/.gnupg/gpg-agent-info-[hostname]"
 
+### Mac OS X
+Add the following to $HOME/.profile or equivalent.
+
+    export SSH_AUTH_SOCK=/Users/$USER/.gnupg/S.gpg-agent.ssh
+
+### Linux
 Add the following to $HOME/.profile or equivalent.
 
     GNUPGHOME=$HOME/.gnupg
