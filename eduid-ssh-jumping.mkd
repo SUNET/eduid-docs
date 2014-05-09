@@ -62,7 +62,9 @@ Step 2 (every morning)
 Set up a single SSH connection to the jump host, and enable SOCKS forwarding. Use 'ping localhost' to
 continuously generate traffic, to keep even the most aggressive NAT/firewall in the path happy.
 
-    $ ssh jump ping localhost
+    $ ssh jump /bin/ping localhost   # Linux
+    
+    $ ssh jump /sbin/ping localhost  # BSD
 
 
 Step 3
