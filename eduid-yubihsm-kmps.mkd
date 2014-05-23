@@ -100,6 +100,13 @@ Verify that Key Slot X is now ENABLED:
 
     # cryptsetup luksDump /dev/sda1
 
+To remove a key, enter the key to the following command:
+
+    # cryptsetup luksRemoveKey /dev/sda1
+    
+As long as the key is known, it can be removed without knowing the Key Slot number.
+
+
 
 Initialize PS
 -------------
