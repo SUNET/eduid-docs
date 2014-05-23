@@ -82,6 +82,24 @@ KCO Enrollment
 
 Each YubiHSM KCO has a YubiKey in static mode which in combination with a personal password (salt) is used to enable full disk encryption on the PS.
 
+To configure a YubiKey in static mode (should be done on PS, using attached HW RNG):
+
+    # ykpersonalize -2 -o-append-cr
+
+To add a new KCO to the LUKS header of the PS:
+
+1. Find unused slot in LUKS header (look for Key Slot X: DISABLED)
+
+    # cryptsetup luksDump /dev/sda1
+
+2. Add a new KCO key to Key Slot X (this requires cooperation of one existing KCO, and the one to be added):
+
+    # cryptsetup luksAddKey --key-slot X /dev/sda1
+
+3. Verify that Key Slot X is now ENABLED:
+
+    # cryptsetup luksDump /dev/sda1
+
 
 Initialize PS
 -------------
