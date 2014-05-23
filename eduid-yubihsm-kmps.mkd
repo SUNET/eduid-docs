@@ -88,15 +88,15 @@ To configure a YubiKey in static mode (should be done on PS, using attached HW R
 
 To add a new KCO to the LUKS header of the PS:
 
-1. Find unused slot in LUKS header (look for Key Slot X: DISABLED)
+Find unused slot in LUKS header (look for Key Slot X: DISABLED)
 
     # cryptsetup luksDump /dev/sda1
 
-2. Add a new KCO key to Key Slot X (this requires cooperation of one existing KCO, and the one to be added):
+Add a new KCO key to Key Slot X (this requires cooperation of one existing KCO, and the one to be added):
 
     # cryptsetup luksAddKey --key-slot X /dev/sda1
 
-3. Verify that Key Slot X is now ENABLED:
+Verify that Key Slot X is now ENABLED:
 
     # cryptsetup luksDump /dev/sda1
 
