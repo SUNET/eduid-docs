@@ -42,10 +42,12 @@ Install Smart card daemon
     
 Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to change username and hostname and check the path to scdaemon.
 
-    scdaemon-program /usr/lib/x86_64-linux-gnu/gnupg2/scdaemon
+    scdaemon-program /usr/lib/gnupg2/scdaemon
     #
     enable-ssh-support
-    log-file /dev/shm/gpg-agent.log
+    # Enable debug logging if needed
+    #debug guru
+    #log-file /dev/shm/gpg-agent.log
     write-env-file "/home/[username]/.gnupg/gpg-agent-info-[hostname]"
 
 ### Mac OS X
