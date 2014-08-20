@@ -204,6 +204,14 @@ it is probably not the right gpg-agent that is currently running. Kill any gpg-a
 how to restart it with a gpg-agent binary that you are sure is >=2.0.22.
 
 
+Tidy up before you forget
+-------------------------
+    
+    # cd /dev/shm/foo
+    # shred -zun 12 secring.gpg
+    # cd ..; rm foo -rf
+    
+
 Write key to card - the OLD way
 -------------------------------
 
