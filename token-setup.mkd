@@ -33,7 +33,7 @@ Download and install GPGSuite from https://gpgtools.org/
 
 ### Ubuntu
     
-    # sudo apt-get install gnupg2 gnupg-agent gpgsm
+    # sudo apt-get install gnupg2 gnupg-agent gpgsm pcscd
     
 Install Smart card daemon
 -------------------------
