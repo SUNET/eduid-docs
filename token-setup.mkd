@@ -46,7 +46,6 @@ Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to change usernam
     #
     enable-ssh-support
     log-file /dev/shm/gpg-agent.log
-    debug guru
     write-env-file "/home/[username]/.gnupg/gpg-agent-info-[hostname]"
 
 ### Mac OS X
