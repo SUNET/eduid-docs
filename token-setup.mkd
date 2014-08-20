@@ -120,14 +120,14 @@ Create some space in memory you can easily clean out later...
     # mkdir foo
     # cd foo
 
-Make sure gpg uses this directory and generate a key using the defaults (a 2048 bit RSA key) and set a 1 year validity.
+Make sure gpg2 uses this directory and generate a key using the defaults (a 2048 bit RSA key) and set a 1 year validity.
 
     # export GNUPGHOME=$PWD
-    # gpg --gen-key
+    # gpg2 --gen-key
 
 Next edit the key in expert mode - $id is the id of the key you just created. Add your uid's (adduid).
 
-    # gpg --edit-key --expert $id
+    # gpg2 --edit-key --expert $id
     gpg> adduid # until done
 
 Now add 1 subkey to be used with SSH.
@@ -151,7 +151,7 @@ Remember to save the changes whe you exit edit mode.
 
 You will also need to save your public key somewhere, so you can import it in your real GPG keyring. Something like
 
-    $ gpg --armor --export $id > ~/my-NEO-public-key.asc
+    $ gpg2 --armor --export $id > ~/my-NEO-public-key.asc
 
 
 Extra credit
@@ -239,7 +239,7 @@ Test
 
 Lets see what we have...
 
-    # gpg --card-status
+    # gpg2 --card-status
     gpg: WARNING: unsafe permissions on homedir `/dev/shm/foo'
     gpg: detected reader `Yubico Yubikey NEO OTP+CCID 00 00'
     Application ID ...: D2760001240102000000000000010000
