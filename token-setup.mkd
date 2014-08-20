@@ -154,20 +154,17 @@ You will also need to save your public key somewhere, so you can import it in yo
     $ gpg --armor --export $id > ~/my-NEO-public-key.asc
 
 
-Clone ykneo-opengpg repo
-------------------------
+Extra credit
+------------
+For extra credit, build your own openpgp applet.
 
-You need some software.
+Clone ykneo-opengpg repo.
 
     # echo $PWD
     /dev/shm/foo
     # git clone https://github.com/Yubico/ykneo-openpgp
 
-
-Extra credit
-------------
-
-For extra credit, build your own openpgp applet and set APPLET_ID to include your keyID: Edit build.xml and change APPLET_AID to end in 0xFF:0x00:[your key]:0x00:0x00. The 0xFF bit is to use an unmanaged range.
+Set APPLET_ID to include your keyID: Edit build.xml and change APPLET_AID to end in 0xFF:0x00:[your key]:0x00:0x00. The 0xFF bit is to use an unmanaged range.
 
 Example with the key above would be (key id 662D4043),
 
@@ -187,8 +184,6 @@ Write key to card
 
 The best way to get the secret key installed in the NEO is to use GPG >= 2.0.22. Really.
 
-Approximate instructions from memory :
-
     # gpg2 --edit-key $id
     gpg> toggle
     gpg> keytocard
@@ -206,7 +201,7 @@ it is probably not the right gpg-agent that is currently running. Kill any gpg-a
 
     /etc/X11/Xsession.d/90gpg-agent
     
-how to restart it with a gpg-agent binary that you are sure is 2.0.22.
+how to restart it with a gpg-agent binary that you are sure is >=2.0.22.
 
 
 Write key to card - the OLD way
