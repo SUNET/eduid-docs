@@ -103,7 +103,7 @@ Verify that Key Slot X is now ENABLED:
 To remove a key, enter the key to the following command:
 
     # cryptsetup luksRemoveKey /dev/sda1
-    
+
 As long as the key is known, it can be removed without knowing the Key Slot number.
 
 
@@ -128,6 +128,81 @@ Assemble a KCO and an SO present in the office. The KCO is responsible for key o
 6. PS is shut down and again placed in the SAFE by the SO.
 7. The KCO FDE token is returned to BLACK zone storage by the "Deposit to SAFE" procedure.
 
+
+Detailed commands for generating HMAC keys (step 4 above)
+---------------------------------------------------------
+
+The current date, plus a key usage letter combination is used as key handle. The program
+`vccs-configure-hsms' will suggest key handles using this scheme:
+
+Assuming the date is 2014-02-21, the regular password credential HMAC key is called 0x140221aa
+and the OATH credential HMAC key is called 0x140221da.
+
+If a second key needs to be created the same day, it should be called 0x140221ab or 0x140221db.
+
+To bootstrap a brand new HSM (or one whose configuration has been reset using the 'zap' CLI command):
+
+   $ ./vccs-configure-hsms --init
+
+1. Insert the first YubiHSM while pressing the button underneath the hole to get it into
+   programming mode.
+
+2. Generate new keys
+
+   Password credentials key:
+
+   $ ./vccs-configure-hsms --keydb_file /path/to/key.db --gen_key
+   Insert a YubiHSM and press enter
+   INFO      Detected YubiHSM with id : xxx
+   Enter new key handle (press enter for '140221aa') :
+   INFO      New key '140221aa' added to key database.
+   $
+
+   OATH tokey key:
+
+   $ ./vccs-configure-hsms --keydb_file /path/to/key.db --gen_key --key_usage oath
+   Insert a YubiHSM and press enter
+   INFO      Detected YubiHSM with id : xxx
+   Enter new key handle (press enter for ' 140221da') :
+   INFO      New key '140221da' added to key database.
+   $
+
+3. Install generated keys on any number of VALIDATOR HSMs:
+
+   Be prepared to enter the Master Key to unlock the configuration if prompted.
+
+   $ ./vccs-configure-hsms --keydb_file /path/to/key.db --max_key_age 1095 --install_keys 140221aa
+   Insert a YubiHSM and press enter
+   INFO      Detected YubiHSM with id : xxx
+   INFO
+   INFO      Keys now in HSM :
+   INFO        140221aa (age: 0 day(s), flags=0x10000, usage=unknown)
+   Commit changes to keystore? Enter 'yes' or 'no' : yes
+   INFO     xxx Keys committed to keystore.
+   $
+
+   $ ./vccs-configure-hsms --keydb_file /path/to/key.db --max_key_age 1095 --install_keys 140221da --key_usage oath
+   Insert a YubiHSM and press enter
+   INFO      Detected YubiHSM with id : xxx
+   INFO
+   INFO      Keys now in HSM :
+   INFO        140221aa (age: 0 day(s), flags=0x10000, usage=unknown)
+   INFO        140221da (age: 0 day(s), flags=0x20000, usage=unknown)
+   Commit changes to keystore? Enter 'yes' or 'no' : yes
+   INFO     xxx Keys committed to keystore.
+   $
+
+4. Create special ORIGINATOR HSM:s for generation of new OATH credential AEADs:
+
+   $ ./vccs-configure-hsms --keydb_file /path/to/key.db --max_key_age 1095 --install_keys 140221da --key_usage oath --originator
+   Insert a YubiHSM and press enter
+   INFO      Detected YubiHSM with id : xxx
+   INFO
+   INFO      Keys now in HSM :
+   INFO        140221da (age: 0 day(s), flags=0x2, usage=unknown)
+   Commit changes to keystore? Enter 'yes' or 'no' : yes
+   INFO     xxx Keys committed to keystore.
+   $
 
 
 
