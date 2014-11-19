@@ -87,6 +87,7 @@ If you want to use the token in a virtual machine (VMWare Fusion) when running O
 
 Setup user access to the yubikey USB device
 -------------------------------------------
+This step might not be needed in all cases.
 
 /etc/udev/rules.d/69-yubikey.rules
 
@@ -111,7 +112,7 @@ Setup user access to the yubikey USB device
       TEST=="/var/run/ConsoleKit/database", \
       RUN+="udev-acl --action=$env{ACTION} --device=$env{DEVNAME}"
 
-Generate key
+Generate key outside card
 ------------
 
 Create some space in memory you can easily clean out later...
@@ -154,10 +155,30 @@ You will also need to save your public key somewhere, so you can import it in yo
 
     $ gpg2 --armor --export $id > ~/my-NEO-public-key.asc
 
+Generate key on the card
+------------------------
+This is probably how you generate the key on the yubikey, comments welcome!
+    
+    $ gpg2 --card-edit
+    gpg/card> generate
+    # Generate a key using the defaults (a 2048 bit RSA key) and set a 1 year validity.
+    gpg/card> list
+    
+    pub  2048R/662D4043  created: 2013-10-01  expires: 2014-10-01  usage: SC
+                     trust: ultimate      validity: ultimate
+    sub  2048R/FED803A7  created: 2013-10-01  expires: 2014-10-01  usage: E
+    sub  2048R/4334FEF8  created: 2013-10-01  expires: 2014-10-01  usage: A
+    [ unknown] (1)  Leif Johansson <leifj@nordu.net>
+    [ unknown] (2)  Leif Johansson <leifj@mnt.se>
+    [ unknown] (3). Leif Johansson <leifj@sunet.se>
+    
+You will also need to save your public key somewhere, so you can import it in your real GPG keyring. Something like
+
+    $ gpg2 --armor --export $id > ~/my-NEO-public-key.asc
 
 Extra credit
 ------------
-For extra credit, build your own openpgp applet.
+For extra credit, build your own openpgp applet. Depending on version of your yubikey this step might not be doable.
 
 Clone ykneo-opengpg repo.
 
