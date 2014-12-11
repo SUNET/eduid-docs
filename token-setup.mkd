@@ -23,7 +23,7 @@ Install ykpersonalize
 ---------------------
 
     # sudo apt-get install yubikey-personalization
-    
+
 Install Gnupg2
 -------------------------
 
@@ -32,14 +32,14 @@ Install Gnupg2
 Download and install GPGSuite from https://gpgtools.org/
 
 ### Ubuntu
-    
+
     # sudo apt-get install gnupg2 gnupg-agent gpgsm pcscd
-    
+
 Install Smart card daemon
 -------------------------
 
     # sudo apt-get install scdaemon
-    
+
 Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to change username and hostname and check the path to scdaemon.
 
     scdaemon-program /usr/lib/gnupg2/scdaemon
@@ -101,7 +101,7 @@ This step might not be needed in all cases.
     ENV{ID_SECURITY_TOKEN}="1"
 
     LABEL="yubico_end"
-    
+
 /etc/udev/rules.d/70-yubikey.rules
 
     # Udev rules for letting the console user access the Yubikey USB
@@ -158,12 +158,15 @@ You will also need to save your public key somewhere, so you can import it in yo
 Generate key on the card
 ------------------------
 This is probably how you generate the key on the yubikey, comments welcome!
-    
+
     $ gpg2 --card-edit
+    gpg/card> admin
+    Admin commands are allowed
+
     gpg/card> generate
     # Generate a key using the defaults (a 2048 bit RSA key) and set a 1 year validity.
     gpg/card> list
-    
+
     pub  2048R/662D4043  created: 2013-10-01  expires: 2014-10-01  usage: SC
                      trust: ultimate      validity: ultimate
     sub  2048R/FED803A7  created: 2013-10-01  expires: 2014-10-01  usage: E
@@ -171,7 +174,7 @@ This is probably how you generate the key on the yubikey, comments welcome!
     [ unknown] (1)  Leif Johansson <leifj@nordu.net>
     [ unknown] (2)  Leif Johansson <leifj@mnt.se>
     [ unknown] (3). Leif Johansson <leifj@sunet.se>
-    
+
 You will also need to save your public key somewhere, so you can import it in your real GPG keyring. Something like
 
     $ gpg2 --armor --export $id > ~/my-NEO-public-key.asc
@@ -214,25 +217,25 @@ The best way to get the secret key installed in the NEO is to use GPG >= 2.0.22.
     gpg> key 1
     gpg> key 2
     gpg> keytocard
-    
+
 During this stage it is very important that only a gpg-agent with version >=2.0.22 is running. If you get errors like
 
     gpg: error writing key to card: Not supported
-    
+
 it is probably not the right gpg-agent that is currently running. Kill any gpg-agent process and look in
 
     /etc/X11/Xsession.d/90gpg-agent
-    
+
 how to restart it with a gpg-agent binary that you are sure is >=2.0.22.
 
 
 Tidy up before you forget
 -------------------------
-    
+
     # cd /dev/shm/foo
     # shred -zun 12 secring.gpg
     # cd ..; rm foo -rf
-    
+
 
 Write key to card - the OLD way
 -------------------------------
