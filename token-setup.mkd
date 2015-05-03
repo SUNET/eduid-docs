@@ -149,8 +149,18 @@ Pick RSA (set your own capabilities) and toggle S & E & A which should result in
     [ unknown] (2)  Leif Johansson <leifj@mnt.se>
     [ unknown] (3). Leif Johansson <leifj@sunet.se>
 
-Remember to save the changes whe you exit edit mode.
+Remember to save the changes when you exit edit mode.
 
+When writing the keys to your card, gpg2 will delete the existing keys on your keyring and replace them with a stub. If you want a backup of the keys to store offline in a safe place, then now is the time to make a backup using either:
+
+    $ cp secring.gpg secring.gpg.backup
+    $ cp pubring.gpg pubring.gpg.backup
+    $ cp secring.gpg.backup pubring.gpg.backup /path/to/backup/media
+
+Or by only exporting the secret key, including subkeys, to the offline backup: 
+    
+    $ gpg2 --export-secret-key --armor > /path/to/backup/media/secretkey.backup
+    
 You will also need to save your public key somewhere, so you can import it in your real GPG keyring. Something like
 
     $ gpg2 --armor --export $id > ~/my-NEO-public-key.asc
