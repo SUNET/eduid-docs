@@ -218,6 +218,7 @@ Write key to card
 -----------------
 
 The best way to get the secret key installed in the NEO is to use GPG >= 2.0.22. Really.
+Note that gpg2 might ask for the YubiKey admin pin (default 12345678) when moving the primary key.
 
     # gpg2 --edit-key $id
     gpg> toggle
