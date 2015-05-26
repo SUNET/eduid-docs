@@ -122,24 +122,91 @@ Create some space in memory you can easily clean out later...
     # mkdir foo
     # cd foo
 
+Create a gpg.conf in the foo directory containing:
+
+    default-preference-list SHA512 SHA384 SHA256 SHA224 AES256 AES192 AES CAST5 ZLIB BZIP2 ZIP Uncompressed
+    personal-digest-preferences SHA512
+    cert-digest-algo SHA512
+
 Make sure gpg2 uses this directory and generate a key using the defaults (a 2048 bit RSA key) and set a 1 year validity.
 
     # export GNUPGHOME=$PWD
     # gpg2 --gen-key
-
-Next edit the key in expert mode - $id is the id of the key you just created. Add your uid's (adduid).
+    [...]
+    Please select what kind of key you want:
+    (1) RSA and RSA (default)
+    (2) DSA and Elgamal
+    (3) DSA (sign only)
+    (4) RSA (sign only)
+    Your selection? 1 [enter]
+    RSA keys may be between 1024 and 4096 bits long.
+    What keysize do you want? (2048) [enter]
+    Requested keysize is 2048 bits
+    Please specify how long the key should be valid.
+         0 = key does not expire
+      <n>  = key expires in n days
+      <n>w = key expires in n weeks
+      <n>m = key expires in n months
+      <n>y = key expires in n years
+    Key is valid for? (0) 1y [enter]
+    Key expires at ons 25 maj 2016 15:45:52 CEST
+    Is this correct? (y/N) y [enter]
+    [...]
+    Real name: Test Testsson [enter]
+    Email address: test@example.com [enter]
+    Comment: [enter] <--- Leave this field empty
+    You selected this USER-ID:
+        "Test Testsson <test@example.com>"
+        
+    Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
+    You need a Passphrase to protect your secret key.
+    
+    Choose a strong password that is unique for this key and is made up of a random combination of both upper and lower letters as well as numbers.
+    
+Next edit the key in expert mode - $id is the id of the key you just created. Add your email addresses with adduid.
 
     # gpg2 --edit-key --expert $id
     gpg> adduid # until done
 
-Now add 1 subkey to be used with SSH.
+Now add 1 subkey to be used with SSH. Pick RSA (set your own capabilities) and toggle S & E & A which should result in only "Authenticate".
 
     gpg> addkey
-
-Pick RSA (set your own capabilities) and toggle S & E & A which should result in only "Authenticate". This is what the result should look like.
+    [...]
+    Please select what kind of key you want:
+    (3) DSA (sign only)
+    (4) RSA (sign only)
+    (5) Elgamal (encrypt only)
+    (6) RSA (encrypt only)
+    (7) DSA (set your own capabilities)
+    (8) RSA (set your own capabilities)
+    Your selection? 8 [enter]
+        
+    Possible actions for a RSA key: Sign Encrypt Authenticate 
+    Current allowed actions: Sign Encrypt 
+        
+    (S) Toggle the sign capability
+    (E) Toggle the encrypt capability
+    (A) Toggle the authenticate capability
+    (Q) Finished
+        
+    Your selection? S [enter], E [enter], A [enter], Q [enter]
+    [...]
+    What keysize do you want? (2048) [enter] 
+    Requested keysize is 2048 bits
+    Please specify how long the key should be valid.
+           0 = key does not expire
+        <n>  = key expires in n days
+        <n>w = key expires in n weeks
+        <n>m = key expires in n months
+        <n>y = key expires in n years
+    Key is valid for? (0) 1y [enter]
+    Key expires at ons 25 maj 2016 16:34:06 CEST
+    Is this correct? (y/N) y [enter]
+    Really create? (y/N) y [enter]
+    
+This is what the result should look like.
 
     gpg> list
-
 
     pub  2048R/662D4043  created: 2013-10-01  expires: 2014-10-01  usage: SC
                      trust: ultimate      validity: ultimate
@@ -149,7 +216,9 @@ Pick RSA (set your own capabilities) and toggle S & E & A which should result in
     [ unknown] (2)  Leif Johansson <leifj@mnt.se>
     [ unknown] (3). Leif Johansson <leifj@sunet.se>
 
-Remember to save the changes when you exit edit mode.
+Remember to save the changes when you exit edit mode using the command save.
+
+    gpg> save
 
 When writing the keys to your card, gpg2 will delete the existing keys on your keyring and replace them with a stub. If you want a backup of the keys to store offline in a safe place, then now is the time to make a backup using either:
 
@@ -228,6 +297,23 @@ Note that gpg2 might ask for the YubiKey admin pin (default 12345678) when movin
     gpg> key 1
     gpg> key 2
     gpg> keytocard
+    
+Do not forget to change the YubiKey admin pin (default 12345678, as well as the user pin (default 123456) to a strong password.
+
+    # gpg2 --card-edit
+    gpg/card> admin
+    Admin commands are allowed
+        
+    gpg/card> passwd
+    [...]
+        
+    1 - change PIN
+    2 - unblock PIN
+    3 - change Admin PIN
+    4 - set the Reset Code
+    Q - quit
+        
+    Your selection? 1 [enter], 3 [enter], Q [enter]
 
 During this stage it is very important that only a gpg-agent with version >=2.0.22 is running. If you get errors like
 
