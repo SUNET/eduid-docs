@@ -161,7 +161,8 @@ Make sure gpg2 uses this directory and generate a key using the defaults (a 2048
     Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
     You need a Passphrase to protect your secret key.
     
-    Choose a strong password that is unique for this key and is made up of a random combination of both upper and lower letters as well as numbers.
+    Choose a strong password that is unique for this key and is made up of a random combination
+    of both upper and lower letters, as well as numbers.
     
 Next edit the key in expert mode - $id is the id of the key you just created. Add your email addresses with adduid.
 
@@ -298,7 +299,8 @@ Note that gpg2 might ask for the YubiKey admin pin (default 12345678) when movin
     gpg> key 2
     gpg> keytocard
     
-Do not forget to change the YubiKey admin pin (default 12345678, as well as the user pin (default 123456) to a strong password.
+Do not forget to change the YubiKey admin pin (default 12345678), as well as the
+user pin (default 123456) to a strong password.
 
     # gpg2 --card-edit
     gpg/card> admin
