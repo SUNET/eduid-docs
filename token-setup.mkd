@@ -303,6 +303,7 @@ Do not forget to change the YubiKey admin pin (default 12345678), as well as the
 user pin (default 123456) to a strong password.
 
     # gpg2 --card-edit
+    [...]
     gpg/card> admin
     Admin commands are allowed
         
@@ -395,6 +396,28 @@ Lets see what we have...
     sec   2048R/662D4043  created: 2013-10-01  expires: 2014-10-01
     ssb   2048R/FED803A7  created: 2013-10-01  expires: 2014-10-01
     ssb   2048R/4B6FEF82  created: 2013-10-01  expires: 2014-10-01
+
+
+Revoke old key if it is not going to be used
+--------------------------------------------
+
+You can use the revoked key to verify old signatures, or decrypt data if you have not lost the private key, but it cannot be used to encrypt new messages to you.
+
+    gpg2 --output revoke.asc --gen-revoke '<fingerprint>'
+    [...]
+    Create a revocation certificate for this key? (y/N) y [enter]
+    Please select the reason for the revocation:
+    0 = No reason specified
+    1 = Key has been compromised
+    2 = Key is superseded
+    3 = Key is no longer used
+    Q = Cancel
+    (Probably you want to select 1 here)
+    Your decision? 2 [enter]
+    [...]
+            
+    gpg2 --import revocation-certificate.asc
+    gpg2 --send '<fingerprint>'
 
 
 SSH
