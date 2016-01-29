@@ -114,6 +114,22 @@ This step might not be needed in all cases.
       TEST=="/var/run/ConsoleKit/database", \
       RUN+="udev-acl --action=$env{ACTION} --device=$env{DEVNAME}"
 
+Disable GNOME Keyring's GnuPG and SSH agent emulation code
+----------------------------------------------------------
+
+If you are using GNOME 3 and experience problems such as
+
+    # gpg2 --card-status
+    # gpg: OpenPGP card not available: general error
+
+Or if you notice that you have two gpg-agents running,
+then you can try to disable the GNOME Keyring GnuPG/SSH agent using:
+
+    # echo 'X-GNOME-Autostart-enabled=false' >> /etc/xdg/autostart/gnome-keyring-gpg.desktop
+    # echo 'X-GNOME-Autostart-enabled=false' >> /etc/xdg/autostart/gnome-keyring-ssh.desktop
+    # echo 'X-GNOME-Autostart-enabled=false' >> /etc/xdg/autostart/gnome-keyring-pkcs10.desktop
+    # echo manual > /etc/xdg/systemd/gnome-keyring.override
+
 Generate key outside card
 ------------
 
