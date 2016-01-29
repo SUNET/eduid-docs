@@ -95,10 +95,12 @@ This step might not be needed in all cases.
 
     # Udev rules for letting the console user access the Yubikey USB
     # device node, needed for challenge/response to work correctly.
+    # Because of https://bugs.gnupg.org/gnupg/issue2167 it is
+    # necessary to kill scdaemon. 
 
     # Yubico Yubikey II
-    ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111", \
-    ENV{ID_SECURITY_TOKEN}="1"
+    ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111|0112|0114|0116|0401|0403|0405|0406|0407|0410", \
+        ENV{ID_SECURITY_TOKEN}="1", RUN+="/usr/bin/killall -9 scdaemon"
 
     LABEL="yubico_end"
 
@@ -108,7 +110,7 @@ This step might not be needed in all cases.
     # device node, needed for challenge/response to work correctly.
 
     ACTION=="add|change", SUBSYSTEM=="usb", \
-      ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111", \
+      ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111|0112|0114|0116|0401|0403|0405|0406|0407|0410", \
       TEST=="/var/run/ConsoleKit/database", \
       RUN+="udev-acl --action=$env{ACTION} --device=$env{DEVNAME}"
 
