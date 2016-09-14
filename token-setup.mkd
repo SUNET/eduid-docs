@@ -1,6 +1,6 @@
-% Yubikey NEO setup
-% Leif Johansson
-% 2013-10-01
+% Yubikey setup
+% SUNET
+% 2016-09-14
 
 Yubikey NEO setup
 =================
@@ -99,6 +99,7 @@ Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to change usernam
   ```
       $ ssh-add -L
   ```
+  Don't be alarmed if you, togheter with the output of your public SSH-key, see a message that states "error fetching identities for protocol 1: agent refused operation" this doesn't affect any functionality.
 
 ### Linux
 Add the following to $HOME/.profile or equivalent.
