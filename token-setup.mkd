@@ -51,9 +51,54 @@ Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to change usernam
     write-env-file "/home/[username]/.gnupg/gpg-agent-info-[hostname]"
 
 ### Mac OS X
-Add the following to $HOME/.profile or equivalent.
 
-    export SSH_AUTH_SOCK=/Users/$USER/.gnupg/S.gpg-agent.ssh
+1. Download and install the latest version of GPG Suite from https://gpgtools.org
+  1. Note that when GPG Suite asks you to "Generate a new key pair" - press cancel
+2. To create a default configuration after installation, open a terminal and type:
+
+  ```
+      $ gpg2 --list-keys
+  ```
+3. Insert your Yubikey and type the following to make sure that you can communicate with it:
+
+  ```
+      $ gpg2 --card-status
+  ```
+4. If you already have your (secret)keys on your Yubikey, restore a backup of you public keyring, or fetch you public key from the keyservers:
+
+  ```
+      $ gpg2 --recv-key your-key-id
+  ```
+  For example if I would need to fetch my public key, I could type:
+
+  ```
+      $ gpg2 --recv-key B3337B77
+  ```
+  Or using the longer and therefore more secure format:
+
+  ```
+      $ gpg2 --recv-key 807A5FD4B3337B77
+  ```
+5. Add SSH-support to ~/.gnupg/gpg-agent.conf (with sudo since it's owned by root):
+  5. Note this is the only option needed if you don't want to change the defaults.
+
+  ```
+      $ echo 'enable-ssh-support' | sudo tee > ~/.gnupg/gpg-agent.conf
+  ```
+6. Add the following to ~/.profile to use GPG, i.e. your Yubikey for SSH:
+  6. Note as in the case above, this is the only line of config you need in this file.
+
+  ```
+      $ echo 'export SSH_AUTH_SOCK=/Users/$USER/.gnupg/S.gpg-agent.ssh' >> ~/.profile
+  ```
+7. Logout and login again
+
+8. If the Yubikey already contains your keys, you should now be able to list your public SSH-key with the following command and use SSH as you normally would.
+  8. Please remember that, if an enforced policy of touch-to-sign/auth/decrypt have been enabled, you have to physically touch the Yubikey when it blinks to perform an operation.
+
+  ```
+      $ ssh-add -L
+  ```
 
 ### Linux
 Add the following to $HOME/.profile or equivalent.
