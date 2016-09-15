@@ -467,7 +467,7 @@ Revoke old key if it is not going to be used
 
 You can use the revoked key to verify old signatures, or decrypt data if you have not lost the private key, but it cannot be used to encrypt new messages to you.
 
-    gpg2 --output revoke.asc --gen-revoke '<fingerprint>'
+    gpg2 --output revocation-certificate.asc --gen-revoke '<fingerprint>'
     [...]
     Create a revocation certificate for this key? (y/N) y [enter]
     Please select the reason for the revocation:
