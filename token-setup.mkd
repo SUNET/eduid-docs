@@ -380,7 +380,7 @@ user pin (default 123456) to a strong password.
     4 - set the Reset Code
     Q - quit
         
-    Your selection? 1 [enter], 3 [enter], Q [enter]
+    Your selection? 1 [enter], 3 [enter], 4 [enter], Q [enter]
 
 During this stage it is very important that only a gpg-agent with version >=2.0.22 is running. If you get errors like
 
