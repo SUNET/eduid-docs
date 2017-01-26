@@ -102,7 +102,7 @@ Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to change usernam
   Don't be alarmed if you, togheter with the output of your public SSH-key, see a message that states "error fetching identities for protocol 1: agent refused operation" this doesn't affect any functionality.
 
 ### Linux
-Add the following to $HOME/.profile or equivalent.
+Add the following to $HOME/.bashrc or equivalent.
 
     GNUPGHOME=$HOME/.gnupg
     if [ -f "${GNUPGHOME}/gpg-agent-info-$(hostname)" ]; then
@@ -113,6 +113,18 @@ Add the following to $HOME/.profile or equivalent.
     fi
     GPG_TTY=$(tty)
     export GPG_TTY
+   
+#### gpg-agent >= 2.1.15 (Ubuntu 16.10)
+Add the following to $HOME/.bashrc or equivalent.
+
+    GPG_TTY=$(tty) 
+    export GPG_TTY 
+
+    # Set up ssh-agent socket as specified in gpg-agent(1) 
+    unset SSH_AGENT_PID 
+    if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then 
+        export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)" 
+    fi
 
 Set yubikey in CCID+HID-mode
 ----------------------------
