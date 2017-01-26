@@ -126,6 +126,7 @@ Add the following to $HOME/.bashrc or equivalent.
         export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)" 
     fi
 
+
 Set yubikey in CCID+HID-mode
 ----------------------------
 
