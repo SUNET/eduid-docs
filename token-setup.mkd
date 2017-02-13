@@ -1,6 +1,6 @@
 % Yubikey setup
 % SUNET
-% 2016-09-14
+% 2017-02-13
 
 Yubikey NEO setup
 =================
@@ -203,10 +203,10 @@ Create a gpg.conf in the foo directory containing:
     personal-digest-preferences SHA512
     cert-digest-algo SHA512
 
-Make sure gpg2 uses this directory and generate a key using the defaults (a 2048 bit RSA key) and set a 1 year validity.
+Make sure gpg2 uses this directory and generate a key using the defaults (a 4096 bit RSA key) and set a 1 year validity.
 
     # export GNUPGHOME=$PWD
-    # gpg2 --gen-key
+    # gpg2 --full-gen-key
     [...]
     Please select what kind of key you want:
     (1) RSA and RSA (default)
@@ -215,8 +215,8 @@ Make sure gpg2 uses this directory and generate a key using the defaults (a 2048
     (4) RSA (sign only)
     Your selection? 1 [enter]
     RSA keys may be between 1024 and 4096 bits long.
-    What keysize do you want? (2048) [enter]
-    Requested keysize is 2048 bits
+    What keysize do you want? (4096) [enter]
+    Requested keysize is 4096 bits
     Please specify how long the key should be valid.
          0 = key does not expire
       <n>  = key expires in n days
@@ -267,8 +267,8 @@ Now add 1 subkey to be used with SSH. Pick RSA (set your own capabilities) and t
         
     Your selection? S [enter], E [enter], A [enter], Q [enter]
     [...]
-    What keysize do you want? (2048) [enter] 
-    Requested keysize is 2048 bits
+    What keysize do you want? (4096) [enter] 
+    Requested keysize is 4096 bits
     Please specify how long the key should be valid.
            0 = key does not expire
         <n>  = key expires in n days
@@ -284,10 +284,10 @@ This is what the result should look like.
 
     gpg> list
 
-    pub  2048R/662D4043  created: 2013-10-01  expires: 2014-10-01  usage: SC
+    pub  4096R/662D4043  created: 2013-10-01  expires: 2014-10-01  usage: SC
                      trust: ultimate      validity: ultimate
-    sub  2048R/FED803A7  created: 2013-10-01  expires: 2014-10-01  usage: E
-    sub  2048R/4334FEF8  created: 2013-10-01  expires: 2014-10-01  usage: A
+    sub  4096R/FED803A7  created: 2013-10-01  expires: 2014-10-01  usage: E
+    sub  4096R/4334FEF8  created: 2013-10-01  expires: 2014-10-01  usage: A
     [ unknown] (1)  Leif Johansson <leifj@nordu.net>
     [ unknown] (2)  Leif Johansson <leifj@mnt.se>
     [ unknown] (3). Leif Johansson <leifj@sunet.se>
