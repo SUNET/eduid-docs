@@ -33,22 +33,15 @@ Download and install GPGSuite from https://gpgtools.org/
 
 ### Ubuntu
 
-    # sudo apt-get install gnupg2 gnupg-agent gpgsm pcscd
+    # sudo apt-get install gnupg2 gnupg-agent gpgsm pcscd scdaemon
 
-Install Smart card daemon
--------------------------
+Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to check the path to scdaemon.
 
-    # sudo apt-get install scdaemon
-
-Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to change username and hostname and check the path to scdaemon.
-
-    scdaemon-program /usr/lib/gnupg2/scdaemon
-    #
+    scdaemon-program /usr/lib/gnupg/scdaemon
     enable-ssh-support
     # Enable debug logging if needed
     #debug guru
     #log-file /dev/shm/gpg-agent.log
-    write-env-file "/home/[username]/.gnupg/gpg-agent-info-[hostname]"
 
 ### Mac OS X
 
@@ -102,20 +95,7 @@ Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to change usernam
   Don't be alarmed if you, togheter with the output of your public SSH-key, see a message that states "error fetching identities for protocol 1: agent refused operation" this doesn't affect any functionality.
 
 ### Linux
-Add the following to $HOME/.bashrc or equivalent.
-
-    GNUPGHOME=$HOME/.gnupg
-    if [ -f "${GNUPGHOME}/gpg-agent-info-$(hostname)" ]; then
-        . "${GNUPGHOME}/gpg-agent-info-$(hostname)"
-        export GPG_AGENT_INFO
-        export SSH_AUTH_SOCK
-        export SSH_AGENT_PID
-    fi
-    GPG_TTY=$(tty)
-    export GPG_TTY
-   
-#### gpg-agent >= 2.1.15 (Ubuntu 16.10)
-Add the following to $HOME/.bashrc or equivalent.
+Add the following to $HOME/.bashrc or equivalent
 
     GPG_TTY=$(tty)
     export GPG_TTY
@@ -150,14 +130,9 @@ This step might not be needed in all cases.
 
     ACTION!="add|change", GOTO="yubico_end"
 
-    # Udev rules for letting the console user access the Yubikey USB
-    # device node, needed for challenge/response to work correctly.
-    # Because of https://bugs.gnupg.org/gnupg/issue2167 it is
-    # necessary to kill scdaemon. 
-
-    # Yubico Yubikey II
+    # Yubico Yubikey 4
     ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111|0112|0114|0116|0401|0403|0405|0406|0407|0410", \
-        ENV{ID_SECURITY_TOKEN}="1", RUN+="/usr/bin/killall -9 scdaemon"
+        ENV{ID_SECURITY_TOKEN}="1", RUN+="/usr/sbin/service pcscd restart"
 
     LABEL="yubico_end"
 
@@ -493,13 +468,3 @@ You can use the revoked key to verify old signatures, or decrypt data if you hav
             
     gpg2 --import revocation-certificate.asc
     gpg2 --send '<fingerprint>'
-
-
-SSH
----
-
-    # cat .gnupg/gpg-agent.conf
-    default-cache-ttl 3600
-    enable-ssh-support
-    log-file /tmp/gpg-agent.log
-    debug guru
