@@ -78,8 +78,8 @@ Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to check the path
   ```
       $ echo 'enable-ssh-support' | sudo tee > ~/.gnupg/gpg-agent.conf
   ```
-6. Add the following to ~/.profile to use GPG, i.e. your Yubikey for SSH:
-  6. Note as in the case above, this is the only line of config you need in this file.
+6. Add the following to ~/.profile and ~/.bash_profile to use GPG, i.e. your Yubikey for SSH:
+  6. Note as in the case above, this is the only line of config you need in this files.
 
   ```
       $ echo 'export SSH_AUTH_SOCK=/Users/$USER/.gnupg/S.gpg-agent.ssh' >> ~/.profile
