@@ -83,6 +83,7 @@ Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to check the path
 
   ```
       $ echo 'export SSH_AUTH_SOCK=/Users/$USER/.gnupg/S.gpg-agent.ssh' >> ~/.profile
+      $ echo 'export SSH_AUTH_SOCK=/Users/$USER/.gnupg/S.gpg-agent.ssh' >> ~/.bash_profile
   ```
 7. Logout and login again
 
