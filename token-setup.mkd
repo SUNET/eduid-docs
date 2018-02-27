@@ -1,28 +1,15 @@
 % Yubikey setup
 % SUNET
-% 2017-02-13
+% 2018-02-28
 
-Yubikey NEO setup
+Yubikey setup
 =================
 
-This guide steps you through the process of setting up a YubiKey NEO with the opengpg applet for use with openssh and gpg.
+This guide steps you through the process of setting up a YubiKey for use with openssh and gpg.
 
-Keys are generated outside the NEO for two reasons:
-1) to facilitate backups of the secret key (think loosing your NEO, or upgrading the OpenPGP applet)
-2) who knows how good the RNG in the NEO is? http://smartfacts.cr.yp.to/
-
-
-Add Klas stuff ppa & yubico/stable
-----------------------------------
-
-    # sudo add-apt-repository ppa:klali/stuff
-    # sudo add-apt-repository ppa:yubico/stable
-    # sudo apt-get update
-
-Install ykpersonalize
----------------------
-
-    # sudo apt-get install yubikey-personalization
+Keys are generated outside the Yubikey for two reasons:
+1) to facilitate backups of the secret key (think loosing your Yubikey)
+2) who knows how good the RNG in the Yubikey is? http://smartfacts.cr.yp.to/
 
 Install Gnupg2
 -------------------------
