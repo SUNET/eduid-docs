@@ -96,6 +96,12 @@ Add the following to $HOME/.bashrc or equivalent
 Set yubikey in CCID+HID-mode
 ----------------------------
 
+### Mac OS X
+
+Download and install the latest version of Yubikey NEO Mgmr for reprogramming your Yubikey https://developers.yubico.com/yubikey-neo-manager/
+
+### Linux
+
 From the factory the yubikey is setup only as a standard/classical OTP device. Run the following command to set it in dual HID (keyboard) and CCID mode. Resist the temptation to set it in CCID-only mode - you won't be able to use ykpersonalize again if you do.
 
     # ykpersonalize -m82
@@ -155,8 +161,19 @@ Generate key outside card
 
 Create some space in memory you can easily clean out later...
 
+### Mac OS X
+
+    # umask 077
+    # diskutil erasevolume HFS+ 'RAMDisk' `hdiutil attach -nomount ram://8388608`
+    # cd /Volumes/RAMDisk
+
+### Linux
+
     # umask 077
     # cd /dev/shm
+
+Create a tempdir for gnupg stuff
+
     # mkdir foo
     # cd foo
 
