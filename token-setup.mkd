@@ -67,6 +67,7 @@ Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to check the path
   ```
 6. Add the following to ~/.profile and ~/.bash_profile to use GPG, i.e. your Yubikey for SSH:
   6. Note as in the case above, this is the only line of config you need in this files.
+  6. Also note, that at least in one case the $USER needed to be the actual username in the file(s).
 
   ```
       $ echo 'export SSH_AUTH_SOCK=/Users/$USER/.gnupg/S.gpg-agent.ssh' >> ~/.profile
