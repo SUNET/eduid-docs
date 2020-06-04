@@ -59,7 +59,7 @@ Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to check the path
   ```
       $ gpg2 --recv-key 807A5FD4B3337B77
   ```
-5. Add SSH-support to ~/.gnupg/gpg-agent.conf (with sudo since it's owned by root):
+5. Add SSH-support to ~/.gnupg/gpg-agent.conf:
   5. Note this is the only option needed if you don't want to change the defaults.
 
   ```
