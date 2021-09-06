@@ -203,6 +203,10 @@ A touch policy takes advantage of the fact that the Yubikey is a HSM that can be
 `$ ykman openpgp keys set-touch <AUT|SIG|ENC> ON`
 
 
+#### Disable OTP to get rid of the string that is outputted everytime the key is touched
+`$ ykman config usb --disable OTP`
+
+
 ### Test sign
 `$ gpg --output /tmp/test_sign.sig --sign /tmp/test_sign`
 
@@ -250,7 +254,10 @@ Add the following to $HOME/.bashrc or equivalent
         export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
     fi
 
-Set yubikey in CCID+HID-mode
+#### Disable OTP to get rid of the string that is outputted everytime the key is touched
+`$ ykman config usb --disable OTP`
+
+Set yubikey in CCID+HID-mode (old instruction)
 ----------------------------
 
 From the factory the yubikey is setup only as a standard/classical OTP device. Run the following command to set it in dual HID (keyboard) and CCID mode. Resist the temptation to set it in CCID-only mode - you won't be able to use ykpersonalize again if you do.
@@ -482,6 +489,12 @@ Tidy up before you forget
     # cd /dev/shm/foo
     # shred -zun 12 secring.gpg
     # cd ..; rm foo -rf
+
+Enable Touch policies (Encouraged)
+-------------------------
+A touch policy takes advantage of the fact that the Yubikey is a HSM that can be restricted by touch activation.
+
+`$ ykman openpgp keys set-touch <AUT|SIG|ENC> ON`
 
 Test
 ----
