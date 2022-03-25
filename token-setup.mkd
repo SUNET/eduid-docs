@@ -200,7 +200,7 @@ Logout/login (Is this the only way of doing it?)
 #### Enable Touch policies (Encouraged)
 A touch policy takes advantage of the fact that the Yubikey is a HSM that can be restricted by touch activation.
 
-`$ ykman openpgp keys set-touch <AUT|SIG|ENC> ON`
+`$ ykman openpgp keys set-touch <AUT|SIG|ENC|ATT> ON`
 
 
 #### Disable OTP to get rid of the string that is outputted everytime the key is touched
@@ -494,7 +494,7 @@ Enable Touch policies (Encouraged)
 -------------------------
 A touch policy takes advantage of the fact that the Yubikey is a HSM that can be restricted by touch activation.
 
-`$ ykman openpgp keys set-touch <AUT|SIG|ENC> ON`
+`$ ykman openpgp keys set-touch <AUT|SIG|ENC|ATT> ON`
 
 Test
 ----
