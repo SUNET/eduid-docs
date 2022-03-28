@@ -202,6 +202,7 @@ A touch policy takes advantage of the fact that the Yubikey is a HSM that can be
 
 `$ ykman openpgp keys set-touch <AUT|SIG|ENC|ATT> ON`
 
+Note that attestation (ATT) is only available with YubiKey hardware version 4.3 and above.
 
 #### Disable OTP to get rid of the string that is outputted everytime the key is touched
 `$ ykman config usb --disable OTP`
@@ -495,6 +496,8 @@ Enable Touch policies (Encouraged)
 A touch policy takes advantage of the fact that the Yubikey is a HSM that can be restricted by touch activation.
 
 `$ ykman openpgp keys set-touch <AUT|SIG|ENC|ATT> ON`
+
+Note that attestation (ATT) is only available with YubiKey hardware version 4.3 and above.
 
 Test
 ----
