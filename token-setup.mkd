@@ -106,7 +106,13 @@ You will also need to save your public key somewhere, so you can import it in yo
 `$ gpg --armor --export <ID> > ~/my-public-key.asc`
 
 ### Card modifications
-#### Change Admin PIN/PIN/Reset Code
+#### Change Admin PIN, PIN and set Reset Code
+
+| Type | Default code |
+| --- | --- |
+| PIN | 123456 |
+| Admin PIN | 12345678 |
+
 `$ gpg --edit-card`
 
 1. `admin`
