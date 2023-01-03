@@ -555,3 +555,34 @@ You can use the revoked key to verify old signatures, or decrypt data if you hav
             
     gpg2 --import revocation-certificate.asc
     gpg2 --send '<fingerprint>'
+    
+## Previous manual instructions (only saved as reference).
+<details>
+    <summary>Mac instructions</summary>
+
+### Installation 
+Make sure that `/opt/homebrew/bin` (if using an ARM Mac) or `/usr/local/bin` (x86) is before `/bin` in your `$PATH`. This should be the case with a standard Homebrew installation.
+
+1. `$ brew install ykman`
+2. `$ brew install pinentry-mac`
+3. `$ brew install gnupg`
+
+[...]
+</details>
+
+<details>
+    <summary>Linux instructions</summary>
+
+### Ubuntu/Debian
+
+    # sudo apt-get install gnupg2 gnupg-agent gpgsm pcscd scdaemon
+
+Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to check the path to scdaemon.
+
+    scdaemon-program /usr/lib/gnupg/scdaemon
+    enable-ssh-support
+    # Enable debug logging if needed
+    #debug guru
+    #log-file /dev/shm/gpg-agent.log
+[...]
+</details>
