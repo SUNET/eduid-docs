@@ -19,6 +19,77 @@ Mac instructions
 * brew
 * a usb-memory
 
+### Installation
+Make sure that `/opt/homebrew/bin` (if using an ARM Mac) or `/usr/local/bin` (x86) is before `/bin` in your `$PATH`. This should be the case with a standard Homebrew installation.
+
+1. `$ brew install ykman`
+2. `$ brew install pinentry-mac`
+3. `$ brew install gnupg`
+
+This guide assumes that you are using Bash. Note that this is not the default shell on macOS Catalina and forward.
+
+You can install an up-to-date version of Bash using Homebrew:
+
+1. `$ brew install bash`
+2. `$ sudo bash -c "echo $(which bash) >> /etc/shells"`
+3. `$ chsh -s $(which bash)`
+
+### Update gpg.conf
+Create a gpg.conf in `key_space` containing:
+```
+default-preference-list SHA512 SHA384 SHA256 SHA224 AES256 AES192 AES CAST5 ZLIB BZIP2 ZIP Uncompressed
+personal-digest-preferences SHA512
+cert-digest-algo SHA512
+```
+
+### Install Tugpgp and follow the instruction
+
+
+1. Install [the latest release of Tugpgp](https://github.com/SUNET/tugpgp/releases/latest)
+2. Run the application and follow the guide at [the wiki in Github](https://github.com/SUNET/tugpgp/wiki) for the next steps.
+
+
+Linux instructions
+-------------------------
+
+### Ubuntu/Debian
+
+    # sudo apt-get install gnupg2 gnupg-agent gpgsm pcscd scdaemon
+
+Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to check the path to scdaemon.
+
+    scdaemon-program /usr/lib/gnupg/scdaemon
+    enable-ssh-support
+    # Enable debug logging if needed
+    #debug guru
+    #log-file /dev/shm/gpg-agent.log
+
+Add the following to $HOME/.bashrc or equivalent
+
+    GPG_TTY=$(tty)
+    export GPG_TTY
+    # Set up ssh-agent socket as specified in gpg-agent(1) 
+    unset SSH_AGENT_PID 
+    if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then 
+        export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+    fi
+
+
+1. Download the latest [AppImage](https://github.com/SUNET/tugpgp/releases/latest)
+2. Follow along the guide at [the wiki in Github](https://github.com/SUNET/tugpgp/wiki) for the steps.
+   
+## Previous manual instructions (only saved as reference).
+<details>
+    <summary>Mac instructions</summary>
+
+Mac instructions
+-------------------------
+
+### Prerequisites
+* YubiKey 5 Series
+* brew
+* a usb-memory
+
 ### Installation 
 Make sure that `/opt/homebrew/bin` (if using an ARM Mac) or `/usr/local/bin` (x86) is before `/bin` in your `$PATH`. This should be the case with a standard Homebrew installation.
 
@@ -108,10 +179,10 @@ You will also need to save your public key somewhere, so you can import it in yo
 ### Card modifications
 #### Change Admin PIN, PIN and set Reset Code
 
-| Type | Default code |
-| --- | --- |
-| PIN | 123456 |
-| Admin PIN | 12345678 |
+| Type      | Default code |
+| --------- | ------------ |
+| PIN       | 123456       |
+| Admin PIN | 12345678     |
 
 `$ gpg --edit-card`
 
@@ -235,6 +306,12 @@ should return:
 gpg: encrypted with rsa4096 key, ID <ENCRYPT_SUBKEY_ID>, created <DATE>
       "<NAME> <<EMAIL>>"
 ```
+
+
+</details>
+
+<details>
+    <summary>Linux instructions</summary>
 
 Linux instructions
 -------------------------
@@ -555,34 +632,5 @@ You can use the revoked key to verify old signatures, or decrypt data if you hav
             
     gpg2 --import revocation-certificate.asc
     gpg2 --send '<fingerprint>'
-    
-## Previous manual instructions (only saved as reference).
-<details>
-    <summary>Mac instructions</summary>
-
-### Installation 
-Make sure that `/opt/homebrew/bin` (if using an ARM Mac) or `/usr/local/bin` (x86) is before `/bin` in your `$PATH`. This should be the case with a standard Homebrew installation.
-
-1. `$ brew install ykman`
-2. `$ brew install pinentry-mac`
-3. `$ brew install gnupg`
-
-[...]
-</details>
-
-<details>
-    <summary>Linux instructions</summary>
-
-### Ubuntu/Debian
-
-    # sudo apt-get install gnupg2 gnupg-agent gpgsm pcscd scdaemon
-
-Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to check the path to scdaemon.
-
-    scdaemon-program /usr/lib/gnupg/scdaemon
-    enable-ssh-support
-    # Enable debug logging if needed
-    #debug guru
-    #log-file /dev/shm/gpg-agent.log
-[...]
+ 
 </details>
