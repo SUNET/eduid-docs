@@ -1,6 +1,6 @@
 % Yubikey setup
 % SUNET
-% 2021-09-06
+% 2023-03-23
 
 Yubikey setup
 =================
@@ -17,7 +17,6 @@ Mac instructions
 ### Prerequisites
 * YubiKey 5 Series
 * brew
-* a usb-memory
 
 ### Installation
 Make sure that `/opt/homebrew/bin` (if using an ARM Mac) or `/usr/local/bin` (x86) is before `/bin` in your `$PATH`. This should be the case with a standard Homebrew installation.
