@@ -53,7 +53,7 @@ Linux instructions
 
 ### Ubuntu/Debian
 
-    # sudo apt-get install gnupg2 gnupg-agent gpgsm pcscd scdaemon
+    # sudo apt-get install gnupg2 gnupg-agent gpgsm pcscd scdaemon libfuse2
 
 Add the following to $HOME/.gnupg/gpg-agent.conf. Don't forget to check the path to scdaemon.
 
