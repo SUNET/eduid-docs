@@ -65,6 +65,10 @@ Add the following to $HOME/.bashrc or equivalent
         export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
     fi
 
+For gpg >= 2.4.4 (ex. Ubuntu 24.04) you need to add the following to $HOME/.gnupg/scdaemon.conf
+
+    disable-ccid
+
 
 1. Download the latest [AppImage](https://github.com/SUNET/tugpgp/releases/latest)
 2. Follow along the guide at [the wiki in Github](https://github.com/SUNET/tugpgp/wiki) for the steps.
