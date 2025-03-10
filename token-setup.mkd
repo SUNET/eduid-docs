@@ -37,6 +37,8 @@ cert-digest-algo SHA512
 
 
 1. Install [the latest release of Tugpgp](https://github.com/SUNET/tugpgp/releases/latest)
+   - `$ brew tap sunet/tugpgp`
+   - `$ brew install tugpgp`
 2. Run the application and follow the guide at [the wiki in Github](https://github.com/SUNET/tugpgp/wiki) for the next steps.
 
 
